@@ -11,15 +11,16 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
-### John Doe
+### Fathan Mubina
 
-<img src="images/johndoe.png" width="200px">
+<img src="images/memoflora.png" width="200px">
 
-[[homepage](http://www.comp.nus.edu.sg/~damithch)]
-[[github](https://github.com/johndoe)]
+[[homepage](https://www.fathmubina.com/)]
+[[github](https://github.com/memoflora)]
 [[portfolio](team/johndoe.md)]
 
-* Role: Project Advisor
+* Role: Developer
+* Responsibilities: Backend
 
 ### Jane Doe
 
