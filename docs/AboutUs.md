@@ -11,6 +11,13 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 ## Project team
 
+
+### Raghad Altelmessani
+
+[[github](https://github.com/altelm)]
+
+* Role: team member
+
 ### Fathan Mubina
 
 <img src="images/memoflora.png" width="200px">
@@ -26,6 +33,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 <img src="images/phfabs.png" width="200px">
 
+[github]: https://github.com/phfabs
 [[github](https://github.com/phfabs)]
 [[portfolio](team/phfabs)]
 
@@ -33,6 +41,7 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 * Responsibilities:
     * Implementation
     * Documentation
+
 
 ### Jane Doe
 
@@ -73,3 +82,13 @@ You can reach us at the email `seer[at]comp.nus.edu.sg`
 
 * Role: Developer
 * Responsibilities: UI
+
+### Shu Xian
+
+<img src="images/kip1425.png" width="200px">
+
+[[github](http://github.com/kip1425)]
+[[portfolio](team/johndoe.md)]
+
+* Role: Developer
+* Responsibilities: UX
