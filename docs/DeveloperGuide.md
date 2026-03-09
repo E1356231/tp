@@ -286,27 +286,30 @@ _{Explain here how the data archiving feature will be implemented}_
 
 Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unlikely to have) - `*`
 
-| Priority | As a …​                                     | I can/want to …​                | So that I can…​                      |
-|----------|---------------------------------------------|---------------------------------|--------------------------------------|
-| `* * *`  | user                                        | view all members                | so that I can browse the database    |
-| `* * *`  | user                                        | add a new member                | register new members to the database |
-| `* * *`  | user                                        | delete a member                 | remove inactive records              |
-| `* * *`  | user                                        | view full details of a member   | manage members' account effectively  |
-| `* * *`  | user                                        | view members' membership status | track active or expired memberships  |
+| Priority | As a …​                                     | I can/want to …​                      | So that I can…​                                                   |
+|----------|---------------------------------------------|---------------------------------------|-------------------------------------------------------------------|
+| `* * *`  | user                                        | view all members                      | so that I can browse the database                                 |
+| `* * *`  | user                                        | add a new member                      | register new members to the database                              |
+| `* * *`  | user                                        | delete a member                       | remove inactive records                                           |
+| `* * *`  | user                                        | view full details of a member         | manage members' account effectively                               |
+| `* * *`  | user                                        | find members' by name                 | locate details of a members without going through the entire list |
+| `* *`    | user                                        | edit a member's details               | keep member records updated                                       |
+| `* *`    | user                                        | track membership validity and status  | get a quick overview of active and valid memberships              |
+| `*`      | user                                        | filter members by membership status   | track active or inactive memberships                              |
 
 *{More to be added}*
 
 ### Use cases
 
-(For all use cases below, the **System** is the `FitDesk CLI` and the **Actor** is the `user`, unless specified otherwise)
+(For all use cases below, the **System** is the `FitDesk` and the **Actor** is the `Receptionist`, unless specified otherwise)
 
-**Use case: Delete a member**
+**Use case: Delete Member**
 
 **MSS**
 
-1.  User requests to list members
+1.  Receptionist requests to list members
 2.  FitDesk shows a list of members
-3.  User requests to delete a specific member in the list
+3.  Receptionist requests to delete a specific member in the list
 4.  FitDesk deletes the person
 
     Use case ends.
@@ -317,19 +320,47 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
   Use case ends.
 
+
 * 3a. The given index is invalid.
-
     * 3a1. FitDesk shows an error message.
-
+  
       Use case resumes at step 2.
+
+**Use case: Find Member**
+
+**MSS**
+
+1.  Receptionist requests to find members by keyword(s)
+2.  FitDesk searches for members whose names contain any of the given keywords
+3.  FitDesk shows a list of matching members
+
+    Use case ends.
+
+**Extensions**
+
+* 1a. Receptionist provides no keywords.
+    * 1a1. FitDesk shows an error message.
+  
+      Use case ends.
+
+
+* 3a. No members match the given keyword(s).
+    * 3a1. FitDesk shows an empty list.
+  
+      Use case ends.
 
 *{More to be added}*
 
 ### Non-Functional Requirements
 
-1.  Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
-2.  Should be able to hold up to 1000 persons without a noticeable sluggishness in performance for typical usage.
-3.  A user with above average typing speed for regular English text (i.e. not code, not system admin commands) should be able to accomplish most of the tasks faster using commands than using the mouse.
+1. Should work on any _mainstream OS_ as long as it has Java `17` or above installed.
+2. Should be able to hold up to 1000 members without a noticeable sluggishness in performance for typical usage.
+3. A user with above average typing speed for regular English text should be able to accomplish most tasks faster using commands than using the mouse.
+4. Should be usable by a receptionist with no prior _CLI_ experience after reading the user guide.
+5. Should work fully offline without requiring an internet connection.
+6. Member data, including health information and emergency contacts, should not be transmitted to any external server.
+7. The system is not required to support more than one user at a time.
+8. The product is not required to support multi-branch gym operations.
 
 *{More to be added}*
 
