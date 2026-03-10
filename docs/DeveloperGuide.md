@@ -288,16 +288,46 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 | Priority | As a …​                                     | I can/want to …​                      | So that I can…​                                                   |
 |----------|---------------------------------------------|---------------------------------------|-------------------------------------------------------------------|
-| `* * *`  | user                                        | view all members                      | so that I can browse the database                                 |
+| `* * *`  | user                                        | view all members                      | browse the database                                               |
 | `* * *`  | user                                        | add a new member                      | register new members to the database                              |
 | `* * *`  | user                                        | delete a member                       | remove inactive records                                           |
-| `* * *`  | user                                        | view full details of a member         | manage members' account effectively                               |
-| `* * *`  | user                                        | find members' by name                 | locate details of a members without going through the entire list |
+| `* * *`  | user                                        | view full details of a member         | manage members' accounts effectively                              |
+| `* * *`  | user                                        | find members by name                  | locate details without going through the entire list              |
 | `* *`    | user                                        | edit a member's details               | keep member records updated                                       |
 | `* *`    | user                                        | track membership validity and status  | get a quick overview of active and valid memberships              |
+| `* *`    | user                                        | view memberships expiring soon        | remind members to renew memberships                               |
+| `* *`    | user                                        | view recently added members           | follow up on new member requests                                  |
+| `* *`    | user                                        | filter members by age/joined time/gender | view members in specific groups                                |
+| `* *`    | user                                        | access a help command                 | review the list of commands                                       |
+| `* *`    | user                                        | view command history                  | check past activity                                               |
+| `* *`    | user                                        | auto-save data                        | avoid losing changes if the app closes                            |
+| `* *`    | user                                        | sort members by membership type       | give membership perks appropriately                               |
+| `* *`    | user                                        | detect duplicate members              | avoid accidentally adding the same member                         |
+| `* *`    | user                                        | export/import member data             | view members in the address book across systems                   |
+| `* *`    | user                                        | find members by phone number          | locate members when other details are incorrect                   |
+| `* *`    | user                                        | quickly access a member's emergency contact | contact them in emergencies                                   |
+| `* *`    | user                                        | see clear and comprehensive error messages | correct mistakes efficiently                                   |
+| `* *`    | user                                        | perform actions using typed commands  | work efficiently                                                  |
+| `* *`    | user                                        | add notes to a member                 | record special requests                                           |
+| `* *`    | user                                        | view email addresses                  | send invoices and reminders                                       |
+| `* *`    | user                                        | search by partial name                | avoid needing exact spelling                                      |
+| `* *`    | user                                        | record membership start and end dates | see when a membership ends                                        |
+| `* *`    | user                                        | record phone numbers                  | contact members when needed                                       |
+| `* *`    | user                                        | record email addresses                | send emails to members                                            |
+| `* *`    | user                                        | record member ages                    | determine eligibility and emergency readiness                     |
+| `* *`    | user                                        | record member genders                 | keep relevant demographic info                                    |
+| `* *`    | user                                        | record member names                   | address members properly                                          |
+| `* *`    | user                                        | record emergency contact phone numbers | contact emergency contacts when needed                           |
 | `*`      | user                                        | filter members by membership status   | track active or inactive memberships                              |
-
-*{More to be added}*
+| `*`      | user                                        | schedule notifications on certain dates | send gifts on birthdays or anniversaries                        |
+| `*`      | user                                        | find members with incomplete payment  | contact them to send reminders                                    |
+| `*`      | user                                        | view members who cancelled/changed subscription | get feedback to improve the gym                          |
+| `*`      | user                                        | send mass messages to members         | notify them quickly about sudden events                           |
+| `*`      | user                                        | filter members who live close to the gym | implement targeted discounts                                    |
+| `*`      | user                                        | clear the address book                | delete all members at once                                        |
+| `*`      | user                                        | keep member notes up to date          | ensure notes stay relevant                                        |
+| `*`      | user                                        | pin a member                          | access members with urgent actions quickly                        |
+| `*`      | user                                        | count members after filtering         | know totals for specific filters                                  |
 
 ### Use cases
 
@@ -398,18 +428,19 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Use case: UC05 - Filter Member List by Status**
 
 **MSS**
-1. Receptionist requests to filter member by status (Active/Inactive)
-2. FitDesk filters member list by specified status
-3. FitDesk displays filtered member list
+
+1.  Receptionist requests to filter members by status (Active/Inactive)
+2.  FitDesk filters member list by specified status
+3.  FitDesk displays filtered member list
 
     Use case ends.
 
-**Extension**
+**Extensions**
 
 * 2a. The given status is invalid.
-    * 2a1.FitDesk shows an error message.
+    * 2a1. FitDesk shows an error message.
 
-    Use case ends.
+      Use case ends.
 
 *{More to be added}*
 
@@ -488,3 +519,4 @@ testers are expected to do more *exploratory* testing.
    1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
 
 1. _{ more test cases …​ }_
+
