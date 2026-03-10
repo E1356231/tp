@@ -349,6 +349,35 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
   
       Use case ends.
 
+**Use case: Edit Member**
+
+**MSS**
+
+1. Receptionist requests to edit a specific member
+2. FitDesk displays the current stored information of the selected member
+3. Receptionist modifies one or more fields of the member’s information
+4. Receptionist saves the changes
+5. FitDesk updates the member’s information and confirms the update
+
+    Use case ends.
+
+**Extensions**
+
+* 3a. Invalid input provided
+    * 3a1. FitDesk detects invalid input.
+      3a2. FitDesk displays an error message and requests correct input.
+      3a3. Receptionist corrects the input.
+
+      Use case resumes at step 4.
+
+
+* 3b. Receptionist cancels the edit operation
+    * 3b1. Receptionist cancels the edit request.
+    * 3b2. FitDesk discards the changes and returns to the main member list.
+  
+      Use case ends.
+
+
 *{More to be added}*
 
 ### Non-Functional Requirements
@@ -358,7 +387,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 3. A user with above average typing speed for regular English text should be able to accomplish most tasks faster using commands than using the mouse.
 4. Should be usable by a receptionist with no prior _CLI_ experience after reading the user guide.
 5. Should work fully offline without requiring an internet connection.
-6. Member data, including health information and emergency contacts, should not be transmitted to any external server.
+6. Private contact details such as health information and emergency contacts should not be transmitted to any external server.
 7. The system is not required to support more than one user at a time.
 8. The product is not required to support multi-branch gym operations.
 
@@ -368,6 +397,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 * **Mainstream OS**: Windows, Linux, Unix, MacOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
+* **Member**: A registered gym patron whose details are stored and managed in FitDesk
+* **Membership status**: The current standing of a member's membership, which can be one of the following — active, expired, or suspended
+* **Emergency contact**: A person designated by the member to be contacted in the event of a medical or safety emergency
 
 --------------------------------------------------------------------------------------------------------------------
 
