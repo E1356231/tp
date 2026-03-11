@@ -41,7 +41,11 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label email;
     @FXML
+    private Label type;
+    @FXML
     private Label joinDate;
+    @FXML
+    private Label expiryDate;
     @FXML
     private FlowPane tags;
 
@@ -53,7 +57,9 @@ public class PersonCard extends UiPart<Region> {
         this.person = person;
         id.setText(displayedIndex + ". ");
         memberId.setText(person.getId().toString());
-        joinDate.setText(person.getJoinDate().toString());
+        type.setText("Type: " + person.getMembershipType().toString());
+        joinDate.setText("Date Joined: " + person.getJoinDate().toString());
+        expiryDate.setText("Expiry: " + person.getExpiryDate().toString());
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
         address.setText(person.getAddress().value);

@@ -24,21 +24,25 @@ public class Person {
 
     // Data fields
     private final Address address;
+    private final MembershipType membershipType;
     private final MembershipJoinDate joinDate;
+    private final MembershipExpiryDate expiryDate;
     private final Set<Tag> tags = new HashSet<>();
 
     /**
      * Every field must be present and not null.
      */
     public Person(MemberId id, Name name, Phone phone, Email email, Address address,
-                  MembershipJoinDate joinDate, Set<Tag> tags) {
-        requireAllNonNull(id, name, phone, email, address, joinDate, tags);
+                  MembershipType type, MembershipJoinDate joinDate, Set<Tag> tags) {
+        requireAllNonNull(id, name, phone, email, address, type, joinDate, tags);
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.membershipType = type;
         this.joinDate = joinDate;
+        this.expiryDate = new MembershipExpiryDate(joinDate.getDate(), membershipType);
         this.tags.addAll(tags);
     }
 
@@ -61,9 +65,14 @@ public class Person {
     public Address getAddress() {
         return address;
     }
-
+    public MembershipType getMembershipType() {
+        return membershipType;
+    }
     public MembershipJoinDate getJoinDate() {
         return joinDate;
+    }
+    public MembershipExpiryDate getExpiryDate() {
+        return expiryDate;
     }
 
     /**
@@ -107,6 +116,9 @@ public class Person {
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
                 && address.equals(otherPerson.address)
+                && membershipType.equals(otherPerson.membershipType)
+                && joinDate.equals(otherPerson.joinDate)
+                && expiryDate.equals(otherPerson.expiryDate)
                 && tags.equals(otherPerson.tags)
                 && id.equals(otherPerson.id);
     }
@@ -114,7 +126,7 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(id, name, phone, email, address, joinDate, tags);
+        return Objects.hash(id, name, phone, email, address, membershipType, joinDate, expiryDate, tags);
     }
 
     @Override
@@ -125,7 +137,9 @@ public class Person {
                 .add("phone", phone)
                 .add("email", email)
                 .add("address", address)
+                .add("type", membershipType)
                 .add("join date", joinDate.toString())
+                .add("expiry date", expiryDate.toString())
                 .add("tags", tags)
                 .toString();
     }

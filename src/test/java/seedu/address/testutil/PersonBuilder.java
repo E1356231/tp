@@ -6,7 +6,9 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.MemberId;
+import seedu.address.model.person.MembershipExpiryDate;
 import seedu.address.model.person.MembershipJoinDate;
+import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -23,6 +25,7 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
+    public static final String DEFAULT_TYPE = "Annual";
     public static final String DEFAULT_JOIN_DATE = "11-Mar-2026";
 
     private MemberId id;
@@ -30,6 +33,7 @@ public class PersonBuilder {
     private Phone phone;
     private Email email;
     private Address address;
+    private MembershipType type;
     private MembershipJoinDate joinDate;
     private Set<Tag> tags;
 
@@ -42,6 +46,7 @@ public class PersonBuilder {
         phone = new Phone(DEFAULT_PHONE);
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
+        type = new MembershipType(DEFAULT_TYPE);
         joinDate = new MembershipJoinDate(DEFAULT_JOIN_DATE);
         tags = new HashSet<>();
     }
@@ -55,6 +60,7 @@ public class PersonBuilder {
         phone = personToCopy.getPhone();
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
+        type = personToCopy.getMembershipType();
         joinDate = personToCopy.getJoinDate();
         tags = new HashSet<>(personToCopy.getTags());
     }
@@ -108,7 +114,7 @@ public class PersonBuilder {
     }
 
     public Person build() {
-        return new Person(id, name, phone, email, address, joinDate, tags);
+        return new Person(id, name, phone, email, address, type, joinDate, tags);
     }
 
 }

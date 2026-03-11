@@ -15,6 +15,7 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.MemberId;
 import seedu.address.model.person.MembershipJoinDate;
+import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
@@ -32,6 +33,7 @@ class JsonAdaptedPerson {
     private final String phone;
     private final String email;
     private final String address;
+    private final String type;
     private final String joinDate;
     private final List<JsonAdaptedTag> tags = new ArrayList<>();
 
@@ -41,13 +43,14 @@ class JsonAdaptedPerson {
     @JsonCreator
     public JsonAdaptedPerson(@JsonProperty("member id") String id, @JsonProperty("name") String name,
             @JsonProperty("phone") String phone, @JsonProperty("email") String email,
-            @JsonProperty("address") String address, @JsonProperty("join date") String joinDate,
-            @JsonProperty("tags") List<JsonAdaptedTag> tags) {
+            @JsonProperty("address") String address, @JsonProperty("type") String type,
+            @JsonProperty("join date") String joinDate, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.address = address;
+        this.type = type;
         this.joinDate = joinDate;
         if (tags != null) {
             this.tags.addAll(tags);
@@ -63,6 +66,7 @@ class JsonAdaptedPerson {
         phone = source.getPhone().value;
         email = source.getEmail().value;
         address = source.getAddress().value;
+        type = source.getMembershipType().toString();
         joinDate = source.getJoinDate().toString();
         tags.addAll(source.getTags().stream()
                 .map(JsonAdaptedTag::new)
@@ -112,13 +116,21 @@ class JsonAdaptedPerson {
         }
         final Address modelAddress = new Address(address);
 
+        if (type == null) {
+            throw new IllegalValueException(
+                    String.format(MISSING_FIELD_MESSAGE_FORMAT, MembershipType.class.getSimpleName()));
+        }
+        if (!MembershipType.isValidType(type)) {
+            throw new IllegalValueException(MembershipType.MESSAGE_CONSTRAINTS);
+        }
+        final MembershipType modelType = new MembershipType(type);
+
         final MembershipJoinDate modelJoinDate;
         if (joinDate != null) {
             modelJoinDate = new MembershipJoinDate(joinDate);
         } else {
             modelJoinDate = new MembershipJoinDate();
         }
-
         final Set<Tag> modelTags = new HashSet<>(personTags);
 
         final MemberId modelId;
@@ -128,7 +140,8 @@ class JsonAdaptedPerson {
         } else {
             modelId = GenerateMemberIds.generateNextId();
         }
-        return new Person(modelId, modelName, modelPhone, modelEmail, modelAddress, modelJoinDate, modelTags);
+        return new Person(modelId, modelName, modelPhone, modelEmail, modelAddress,
+                modelType, modelJoinDate, modelTags);
     }
 
 }

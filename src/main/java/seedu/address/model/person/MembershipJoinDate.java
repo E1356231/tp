@@ -10,11 +10,25 @@ import java.time.format.DateTimeFormatter;
 public class MembershipJoinDate {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
     public final String value;
+    public final LocalDate currDate;
+
+    /**
+     * Constructs a {@code MembershipJoinDate} object with the current date.
+     */
     public MembershipJoinDate() {
-        this.value = LocalDate.now().format(FORMATTER);
+        this.currDate = LocalDate.now();
+        this.value = currDate.format(FORMATTER);
     }
+    /**
+     * Constructs a {@code MembershipJoinDate} object with the specified date string.
+     * @param date membership join date as a string
+     */
     public MembershipJoinDate(String date) {
-        this.value = date;
+        this.currDate = LocalDate.parse(date, FORMATTER);
+        this.value = currDate.format(FORMATTER);
+    }
+    public LocalDate getDate() {
+        return currDate;
     }
 
     @Override
