@@ -6,7 +6,6 @@ import java.util.Set;
 import seedu.address.model.person.Address;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.MemberId;
-import seedu.address.model.person.MembershipExpiryDate;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
@@ -25,7 +24,7 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
-    public static final String DEFAULT_TYPE = "Annual";
+    public static final String DEFAULT_TYPE = "annual";
     public static final String DEFAULT_JOIN_DATE = "11-Mar-2026";
 
     private MemberId id;
@@ -102,6 +101,14 @@ public class PersonBuilder {
      */
     public PersonBuilder withId(int id) {
         this.id = new MemberId(id);
+        return this;
+    }
+
+    /**
+     * Sets the {@code MembershipType} of the {@code Person} that we are building.
+     */
+    public PersonBuilder withType(String type) {
+        this.type = new MembershipType(type);
         return this;
     }
 
