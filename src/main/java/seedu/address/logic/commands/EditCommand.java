@@ -28,8 +28,8 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Gender;
-import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MemberId;
+import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
@@ -112,7 +112,8 @@ public class EditCommand extends Command {
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
         Gender updatedGender = editPersonDescriptor.getGender().orElse(personToEdit.getGender());
         DateOfBirth updatedDateOfBirth = editPersonDescriptor.getDateOfBirth().orElse(personToEdit.getDateOfBirth());
-        MemberStatus updatedMemberStatus = editPersonDescriptor.getMemberStatus().orElse(personToEdit.getMemberStatus());
+        MemberStatus updatedMemberStatus = editPersonDescriptor.getMemberStatus()
+                .orElse(personToEdit.getMemberStatus());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         MembershipType updatedType = editPersonDescriptor.getType().orElse(personToEdit.getMembershipType());
