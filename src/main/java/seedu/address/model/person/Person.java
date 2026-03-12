@@ -21,6 +21,9 @@ public class Person {
     private final Name name;
     private final Phone phone;
     private final Email email;
+    private final Gender gender;
+    private final DateOfBirth dateOfBirth;
+    private final MemberStatus memberStatus;
 
     // Data fields
     private final Address address;
@@ -32,13 +35,17 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(MemberId id, Name name, Phone phone, Email email, Address address,
+    public Person(MemberId id, Name name, Phone phone, Email email,Gender gender, DateOfBirth dateOfBirth, 
+                  MemberStatus memberStatus, Address address,
                   MembershipType type, MembershipJoinDate joinDate, Set<Tag> tags) {
         requireAllNonNull(id, name, phone, email, address, type, joinDate, tags);
         this.id = id;
         this.name = name;
         this.phone = phone;
         this.email = email;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.memberStatus = memberStatus;
         this.address = address;
         this.membershipType = type;
         this.joinDate = joinDate;
@@ -73,6 +80,18 @@ public class Person {
     }
     public MembershipExpiryDate getExpiryDate() {
         return expiryDate;
+    }
+
+    public Gender getGender() {
+        return this.gender;
+    }
+
+    public DateOfBirth getDateOfBirth() {
+        return this.dateOfBirth;
+    }
+
+    public MemberStatus getMemberStatus() {
+        return this.memberStatus;
     }
 
     /**
@@ -115,6 +134,9 @@ public class Person {
         return name.equals(otherPerson.name)
                 && phone.equals(otherPerson.phone)
                 && email.equals(otherPerson.email)
+                && gender.equals(otherPerson.gender)
+                && dateOfBirth.equals(otherPerson.dateOfBirth)
+                && memberStatus.equals(otherPerson.memberStatus)
                 && address.equals(otherPerson.address)
                 && membershipType.equals(otherPerson.membershipType)
                 && joinDate.equals(otherPerson.joinDate)
@@ -126,7 +148,7 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(id, name, phone, email, address, membershipType, joinDate, expiryDate, tags);
+        return Objects.hash(id, name, phone, email, gender, dateOfBirth, memberStatus, address, membershipType, joinDate, expiryDate, tags);
     }
 
     @Override
@@ -136,6 +158,9 @@ public class Person {
                 .add("name", name)
                 .add("phone", phone)
                 .add("email", email)
+                .add("gender", gender)
+                .add("date of birth", dateOfBirth)
+                .add("member status", memberStatus)
                 .add("address", address)
                 .add("type", membershipType)
                 .add("join date", joinDate.toString())
