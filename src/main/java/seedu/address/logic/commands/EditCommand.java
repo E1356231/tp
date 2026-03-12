@@ -2,7 +2,10 @@ package seedu.address.logic.commands;
 
 import static java.util.Objects.requireNonNull;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_DATEOFBIRTH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_GENDER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_MEMBERSTATUS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -22,7 +25,10 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.Model;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Gender;
+import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MemberId;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
@@ -45,6 +51,9 @@ public class EditCommand extends Command {
             + "[" + PREFIX_NAME + "NAME] "
             + "[" + PREFIX_PHONE + "PHONE] "
             + "[" + PREFIX_EMAIL + "EMAIL] "
+            + "[" + PREFIX_GENDER + "GENDER] "
+            + "[" + PREFIX_DATEOFBIRTH + "DATEOFBIRTH] "
+            + "[" + PREFIX_MEMBERSTATUS + "MEMBERSTATUS] "
             + "[" + PREFIX_ADDRESS + "ADDRESS] "
             + "[" + PREFIX_TAG + "TAG]...\n"
             + "Example: " + COMMAND_WORD + " 1 "
@@ -101,13 +110,16 @@ public class EditCommand extends Command {
         MemberId memberId = personToEdit.getId();
         Name updatedName = editPersonDescriptor.getName().orElse(personToEdit.getName());
         Phone updatedPhone = editPersonDescriptor.getPhone().orElse(personToEdit.getPhone());
+        Gender updatedGender = editPersonDescriptor.getGender().orElse(personToEdit.getGender());
+        DateOfBirth updatedDateOfBirth = editPersonDescriptor.getDateOfBirth().orElse(personToEdit.getDateOfBirth());
+        MemberStatus updatedMemberStatus = editPersonDescriptor.getMemberStatus().orElse(personToEdit.getMemberStatus());
         Email updatedEmail = editPersonDescriptor.getEmail().orElse(personToEdit.getEmail());
         Address updatedAddress = editPersonDescriptor.getAddress().orElse(personToEdit.getAddress());
         MembershipType updatedType = editPersonDescriptor.getType().orElse(personToEdit.getMembershipType());
         MembershipJoinDate updatedJoinDate = editPersonDescriptor.getJoinDate().orElse(personToEdit.getJoinDate());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        return new Person(memberId, updatedName, updatedPhone, updatedEmail,
+        return new Person(memberId, updatedName, updatedPhone, updatedGender, updatedDateOfBirth, updatedMemberStatus, updatedEmail,
                 updatedAddress, updatedType, updatedJoinDate, updatedTags);
     }
 
@@ -143,6 +155,9 @@ public class EditCommand extends Command {
         private Name name;
         private Phone phone;
         private Email email;
+        private Gender gender;
+        private DateOfBirth dateOfBirth;
+        private MemberStatus memberStatus;
         private Address address;
         private MembershipType type;
         private MembershipJoinDate joinDate;
@@ -157,6 +172,9 @@ public class EditCommand extends Command {
         public EditPersonDescriptor(EditPersonDescriptor toCopy) {
             setName(toCopy.name);
             setPhone(toCopy.phone);
+            setGender(toCopy.gender);
+            setDateOfBirth(toCopy.dateOfBirth);
+            setMemberStatus(toCopy.memberStatus);
             setEmail(toCopy.email);
             setAddress(toCopy.address);
             setType(toCopy.type);
@@ -168,7 +186,7 @@ public class EditCommand extends Command {
          * Returns true if at least one field is edited.
          */
         public boolean isAnyFieldEdited() {
-            return CollectionUtil.isAnyNonNull(name, phone, email, address, type, joinDate, tags);
+            return CollectionUtil.isAnyNonNull(name, phone, gender, dateOfBirth, memberStatus, email, address, type, joinDate, tags);
         }
 
         public void setName(Name name) {
@@ -185,6 +203,30 @@ public class EditCommand extends Command {
 
         public Optional<Phone> getPhone() {
             return Optional.ofNullable(phone);
+        }
+
+        public void setGender(Gender gender) {
+            this.gender = gender;
+        }
+
+        public Optional<Gender> getGender() {
+            return Optional.ofNullable(gender);
+        }
+
+        public void setDateOfBirth(DateOfBirth dateOfBirth) {
+            this.dateOfBirth = dateOfBirth;
+        }
+
+        public Optional<DateOfBirth> getDateOfBirth() {
+            return Optional.ofNullable(dateOfBirth);
+        }
+
+        public void setMemberStatus(MemberStatus memberStatus) {
+            this.memberStatus = memberStatus;
+        }
+
+        public Optional<MemberStatus> getMemberStatus() {
+            return Optional.ofNullable(memberStatus);
         }
 
         public void setEmail(Email email) {
@@ -250,6 +292,9 @@ public class EditCommand extends Command {
             EditPersonDescriptor otherEditPersonDescriptor = (EditPersonDescriptor) other;
             return Objects.equals(name, otherEditPersonDescriptor.name)
                     && Objects.equals(phone, otherEditPersonDescriptor.phone)
+                    && Objects.equals(gender, otherEditPersonDescriptor.gender)
+                    && Objects.equals(dateOfBirth, otherEditPersonDescriptor.dateOfBirth)
+                    && Objects.equals(memberStatus, otherEditPersonDescriptor.memberStatus)
                     && Objects.equals(email, otherEditPersonDescriptor.email)
                     && Objects.equals(address, otherEditPersonDescriptor.address)
                     && Objects.equals(type, otherEditPersonDescriptor.type)
@@ -261,6 +306,9 @@ public class EditCommand extends Command {
             return new ToStringBuilder(this)
                     .add("name", name)
                     .add("phone", phone)
+                    .add("gender", gender)
+                    .add("date of Birth", dateOfBirth)
+                    .add("memberStatus", memberStatus)
                     .add("email", email)
                     .add("address", address)
                     .add("type", type)

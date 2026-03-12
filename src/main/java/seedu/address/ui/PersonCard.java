@@ -37,6 +37,12 @@ public class PersonCard extends UiPart<Region> {
     @FXML
     private Label phone;
     @FXML
+    private Label gender;
+    @FXML
+    private Label dateOfBirth;
+    @FXML
+    private Label memberStatus;
+    @FXML
     private Label address;
     @FXML
     private Label email;
@@ -62,6 +68,9 @@ public class PersonCard extends UiPart<Region> {
         expiryDate.setText("Expiry: " + person.getExpiryDate().toString());
         name.setText(person.getName().fullName);
         phone.setText(person.getPhone().value);
+        gender.setText(person.getGender().gender);
+        dateOfBirth.setText(person.getDateOfBirth().dateOfBirth);
+        memberStatus.setText(person.getMemberStatus().memberStatus);
         address.setText(person.getAddress().value);
         email.setText(person.getEmail().value);
         person.getTags().stream()

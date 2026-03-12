@@ -12,7 +12,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import seedu.address.commons.exceptions.IllegalValueException;
 import seedu.address.model.GenerateMemberIds;
 import seedu.address.model.person.Address;
+import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
+import seedu.address.model.person.Gender;
+import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MemberId;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
@@ -31,6 +34,9 @@ class JsonAdaptedPerson {
     private final String id;
     private final String name;
     private final String phone;
+    private final String gender;
+    private final String dateOfBirth;
+    private final String memberStatus;
     private final String email;
     private final String address;
     private final String type;
@@ -41,13 +47,20 @@ class JsonAdaptedPerson {
      * Constructs a {@code JsonAdaptedPerson} with the given person details.
      */
     @JsonCreator
+
     public JsonAdaptedPerson(@JsonProperty("member id") String id, @JsonProperty("name") String name,
-            @JsonProperty("phone") String phone, @JsonProperty("email") String email,
+            @JsonProperty("phone") String phone, @JsonProperty("gender") String gender, 
+            @JsonProperty("dateOfBirth") String dateOfBirth,
+            @JsonProperty("memberStatus") String memberStatus,
+            @JsonProperty("email") String email,
             @JsonProperty("address") String address, @JsonProperty("type") String type,
             @JsonProperty("join date") String joinDate, @JsonProperty("tags") List<JsonAdaptedTag> tags) {
         this.id = id;
         this.name = name;
         this.phone = phone;
+        this.gender = gender;
+        this.dateOfBirth = dateOfBirth;
+        this.memberStatus = memberStatus;
         this.email = email;
         this.address = address;
         this.type = type;
@@ -64,6 +77,9 @@ class JsonAdaptedPerson {
         id = source.getId().toString();
         name = source.getName().fullName;
         phone = source.getPhone().value;
+        gender = source.getGender().gender;
+        dateOfBirth = source.getDateOfBirth().dateOfBirth;
+        memberStatus = source.getMemberStatus().memberStatus;
         email = source.getEmail().value;
         address = source.getAddress().value;
         type = source.getMembershipType().toString();
@@ -100,6 +116,31 @@ class JsonAdaptedPerson {
         }
         final Phone modelPhone = new Phone(phone);
 
+        if (gender == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Gender.class.getSimpleName()));
+        }
+        if (!Gender.isValidGender(gender)) {
+            throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
+        }
+        final Gender modelGender = new Gender(gender);
+
+        if(dateOfBirth == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    DateOfBirth.class.getSimpleName()));
+        }
+        if (!DateOfBirth.isValidDateOfBirth(dateOfBirth)) {
+            throw new IllegalValueException(DateOfBirth.MESSAGE_CONSTRAINTS);
+        }
+        final DateOfBirth modelDateOfBirth = new DateOfBirth(dateOfBirth);
+
+        if(memberStatus == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, MemberStatus.class.getSimpleName()));
+        }
+        if (!MemberStatus.isValidMemberStatus(memberStatus)) {
+            throw new IllegalValueException(MemberStatus.MESSAGE_CONSTRAINTS);
+        }
+        final MemberStatus modelMemberStatus = new MemberStatus(memberStatus);
+
         if (email == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));
         }
@@ -132,7 +173,7 @@ class JsonAdaptedPerson {
             modelJoinDate = new MembershipJoinDate();
         }
         final Set<Tag> modelTags = new HashSet<>(personTags);
-
+      
         final MemberId modelId;
         if (id != null) {
             int idNumber = Integer.parseInt(id.substring(1));
@@ -140,8 +181,8 @@ class JsonAdaptedPerson {
         } else {
             modelId = GenerateMemberIds.generateNextId();
         }
-        return new Person(modelId, modelName, modelPhone, modelEmail, modelAddress,
-                modelType, modelJoinDate, modelTags);
+        return new Person(modelId, modelName, modelPhone, modelGender, modelDateOfBirth, modelMemberStatus,
+                          modelEmail, modelAddress, modelType, modelJoinDate, modelTags);
     }
 
 }
