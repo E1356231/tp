@@ -35,8 +35,8 @@ public class Person {
     /**
      * Every field must be present and not null.
      */
-    public Person(MemberId id, Name name, Phone phone, Gender gender, DateOfBirth dateOfBirth,
-                  MemberStatus memberStatus, Email email, Address address,
+    public Person(MemberId id, Name name, Phone phone, Gender gender,
+                  DateOfBirth dateOfBirth, Email email, Address address,
                   MembershipType type, MembershipJoinDate joinDate, Set<Tag> tags) {
         requireAllNonNull(id, name, phone, email, address, type, joinDate, tags);
         this.id = id;
@@ -45,11 +45,11 @@ public class Person {
         this.email = email;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
-        this.memberStatus = memberStatus;
         this.address = address;
         this.membershipType = type;
         this.joinDate = joinDate;
         this.expiryDate = new MembershipExpiryDate(joinDate.getDate(), membershipType);
+        this.memberStatus = new MemberStatus(this.expiryDate.getExpiryDate());
         this.tags.addAll(tags);
     }
 
@@ -148,7 +148,8 @@ public class Person {
     @Override
     public int hashCode() {
         // use this method for custom fields hashing instead of implementing your own
-        return Objects.hash(id, name, phone, email, gender, dateOfBirth, memberStatus, address, membershipType, joinDate, expiryDate, tags);
+        return Objects.hash(id, name, phone, email, gender, dateOfBirth,
+                memberStatus, address, membershipType, joinDate, expiryDate, tags);
     }
 
     @Override

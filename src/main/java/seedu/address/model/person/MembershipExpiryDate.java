@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 public class MembershipExpiryDate {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
     public final String value;
+    public final LocalDate expiryDate;
     /**
      * represents the expiry date of member's membership
      * @param date date the member joined the gym
@@ -17,10 +18,16 @@ public class MembershipExpiryDate {
      */
     public MembershipExpiryDate(LocalDate date, MembershipType type) {
         if (type.toString().equalsIgnoreCase("annual")) {
+            this.expiryDate = date.plusYears(1);
             this.value = date.plusYears(1).format(FORMATTER);
         } else {
+            this.expiryDate = date.plusMonths(1);
             this.value = date.plusMonths(1).format(FORMATTER);
         }
+    }
+
+    public LocalDate getExpiryDate() {
+        return this.expiryDate;
     }
 
     @Override

@@ -7,7 +7,6 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Gender;
-import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MemberId;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
@@ -27,7 +26,6 @@ public class PersonBuilder {
     public static final String DEFAULT_PHONE = "85355255";
     public static final String DEFAULT_GENDER = "F";
     public static final String DEFAULT_DATEOFBIRTH = "02-02-2000";
-    public static final String DEFAULT_MEMBERSTATUS = "valid";
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
     public static final String DEFAULT_TYPE = "annual";
@@ -38,7 +36,6 @@ public class PersonBuilder {
     private Phone phone;
     private Gender gender;
     private DateOfBirth dateOfBirth;
-    private MemberStatus memberStatus;
     private Email email;
     private Address address;
     private MembershipType type;
@@ -54,7 +51,6 @@ public class PersonBuilder {
         phone = new Phone(DEFAULT_PHONE);
         gender = new Gender(DEFAULT_GENDER);
         dateOfBirth = new DateOfBirth(DEFAULT_DATEOFBIRTH);
-        memberStatus = new MemberStatus(DEFAULT_MEMBERSTATUS);
         email = new Email(DEFAULT_EMAIL);
         address = new Address(DEFAULT_ADDRESS);
         type = new MembershipType(DEFAULT_TYPE);
@@ -71,7 +67,6 @@ public class PersonBuilder {
         phone = personToCopy.getPhone();
         gender = personToCopy.getGender();
         dateOfBirth = personToCopy.getDateOfBirth();
-        memberStatus = personToCopy.getMemberStatus();
         email = personToCopy.getEmail();
         address = personToCopy.getAddress();
         type = personToCopy.getMembershipType();
@@ -116,6 +111,9 @@ public class PersonBuilder {
      */
     public PersonBuilder withGender(String gender) {
         this.gender = new Gender(gender);
+        return this;
+    }
+    /**
      * Sets the {@code Phone} of the {@code Person} that we are building.
      */
     public PersonBuilder withId(int id) {
@@ -128,18 +126,13 @@ public class PersonBuilder {
      */
     public PersonBuilder withDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = new DateOfBirth(dateOfBirth);
+        return this;
+    }
+    /**
      * Sets the {@code MembershipType} of the {@code Person} that we are building.
      */
     public PersonBuilder withType(String type) {
         this.type = new MembershipType(type);
-        return this;
-    }
-
-    /**
-     * Sets the {@code MemberStatus} of the {@code Person} that we are building.
-     */
-    public PersonBuilder withMemberStatus(String memberStatus) {
-        this.memberStatus = new MemberStatus(memberStatus);
         return this;
     }
     /**
@@ -151,7 +144,7 @@ public class PersonBuilder {
     }
 
     public Person build() {
-        return new Person(id, name, phone, gender, dateOfBirth, memberStatus, email, address, type, joinDate, tags);
+        return new Person(id, name, phone, gender, dateOfBirth, email, address, type, joinDate, tags);
     }
 
 }

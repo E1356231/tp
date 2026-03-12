@@ -43,10 +43,10 @@ public class AddCommandParser implements Parser<AddCommand> {
     public AddCommand parse(String args) throws ParseException {
         ArgumentMultimap argMultimap =
                 ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_GENDER, PREFIX_DATEOFBIRTH,
-                        PREFIX_MEMBERSTATUS, PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_MEMBERSHIP_TYPE, PREFIX_TAG);
+                        PREFIX_EMAIL, PREFIX_ADDRESS, PREFIX_MEMBERSHIP_TYPE, PREFIX_TAG);
 
         if (!arePrefixesPresent(argMultimap, PREFIX_NAME, PREFIX_ADDRESS, PREFIX_PHONE, PREFIX_EMAIL,
-                PREFIX_GENDER, PREFIX_DATEOFBIRTH, PREFIX_MEMBERSTATUS, PREFIX_MEMBERSHIP_TYPE)
+                PREFIX_GENDER, PREFIX_DATEOFBIRTH, PREFIX_MEMBERSHIP_TYPE)
                 || !argMultimap.getPreamble().isEmpty()) {
             ArgumentTokenizer.tokenize(args, PREFIX_NAME, PREFIX_PHONE, PREFIX_EMAIL, PREFIX_ADDRESS,
                     PREFIX_MEMBERSHIP_TYPE, PREFIX_TAG);
@@ -58,19 +58,18 @@ public class AddCommandParser implements Parser<AddCommand> {
         }
 
         argMultimap.verifyNoDuplicatePrefixesFor(PREFIX_NAME, PREFIX_PHONE, PREFIX_GENDER, PREFIX_DATEOFBIRTH,
-                PREFIX_MEMBERSTATUS, PREFIX_EMAIL, PREFIX_ADDRESS);
+                PREFIX_EMAIL, PREFIX_ADDRESS);
         Name name = ParserUtil.parseName(argMultimap.getValue(PREFIX_NAME).get());
         Phone phone = ParserUtil.parsePhone(argMultimap.getValue(PREFIX_PHONE).get());
         Gender gender = ParserUtil.parseGender(argMultimap.getValue(PREFIX_GENDER).get());
         DateOfBirth dateOfBirth = ParserUtil.parseDateOfBirth(argMultimap.getValue(PREFIX_DATEOFBIRTH).get());
-        MemberStatus memberStatus = ParserUtil.parseMemberStatus(argMultimap.getValue(PREFIX_MEMBERSTATUS).get());
         Email email = ParserUtil.parseEmail(argMultimap.getValue(PREFIX_EMAIL).get());
         Address address = ParserUtil.parseAddress(argMultimap.getValue(PREFIX_ADDRESS).get());
         MembershipType membershipType = ParserUtil.parseType(argMultimap.getValue(PREFIX_MEMBERSHIP_TYPE).get());
         Set<Tag> tagList = ParserUtil.parseTags(argMultimap.getAllValues(PREFIX_TAG));
         MemberId memberId = GenerateMemberIds.generateNextId();
         MembershipJoinDate joinDate = new MembershipJoinDate();
-        Person person = new Person(memberId, name, phone, gender, dateOfBirth, memberStatus, email, address, membershipType, joinDate, tagList);
+        Person person = new Person(memberId, name, phone, gender, dateOfBirth, email, address, membershipType, joinDate, tagList);
 
 
         return new AddCommand(person);

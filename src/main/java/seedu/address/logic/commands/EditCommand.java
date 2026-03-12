@@ -119,7 +119,7 @@ public class EditCommand extends Command {
         MembershipJoinDate updatedJoinDate = editPersonDescriptor.getJoinDate().orElse(personToEdit.getJoinDate());
         Set<Tag> updatedTags = editPersonDescriptor.getTags().orElse(personToEdit.getTags());
 
-        return new Person(memberId, updatedName, updatedPhone, updatedGender, updatedDateOfBirth, updatedMemberStatus, updatedEmail,
+        return new Person(memberId, updatedName, updatedPhone, updatedGender, updatedDateOfBirth, updatedEmail,
                 updatedAddress, updatedType, updatedJoinDate, updatedTags);
     }
 
