@@ -29,7 +29,7 @@ public class PersonBuilder {
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
     public static final String DEFAULT_TYPE = "annual";
-    public static final String DEFAULT_JOIN_DATE = "11-Mar-2026";
+    public static final String DEFAULT_JOIN_DATE = "11-03-2026";
 
     private MemberId id;
     private Name name;

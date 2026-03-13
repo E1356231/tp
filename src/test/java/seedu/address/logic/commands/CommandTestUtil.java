@@ -6,8 +6,8 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_ADDRESS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_DATEOFBIRTH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_GENDER;
-import static seedu.address.logic.parser.CliSyntax.PREFIX_MEMBERSTATUS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MEMBERSHIP_TYPE;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_MEMBERSTATUS;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_TAG;
@@ -87,13 +87,11 @@ public class CommandTestUtil {
     static {
         DESC_AMY = new EditPersonDescriptorBuilder().withName(VALID_NAME_AMY)
                 .withGender(VALID_GENDER_AMY).withDateOfBirth(VALID_DATEOFBIRTH_AMY)
-                .withMemberStatus(VALID_MEMBERSTATUS_AMY).withPhone(VALID_PHONE_AMY)
                 .withEmail(VALID_EMAIL_AMY).withAddress(VALID_ADDRESS_AMY)
                 .withType(VALID_TYPE_AMY)
                 .withTags(VALID_TAG_FRIEND).build();
         DESC_BOB = new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB)
                 .withGender(VALID_GENDER_BOB).withDateOfBirth(VALID_DATEOFBIRTH_BOB)
-                .withMemberStatus(VALID_MEMBERSTATUS_BOB).withPhone(VALID_PHONE_BOB)
                 .withEmail(VALID_EMAIL_BOB).withAddress(VALID_ADDRESS_BOB)
                 .withType(VALID_TYPE_BOB)
                 .withTags(VALID_TAG_HUSBAND, VALID_TAG_FRIEND).build();
