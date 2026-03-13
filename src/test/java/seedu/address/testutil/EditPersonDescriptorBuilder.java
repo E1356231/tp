@@ -9,7 +9,6 @@ import seedu.address.model.person.Address;
 import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Gender;
-import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
@@ -76,14 +75,6 @@ public class EditPersonDescriptorBuilder {
      */
     public EditPersonDescriptorBuilder withDateOfBirth(String dateOfBirth) {
         descriptor.setDateOfBirth(new DateOfBirth(dateOfBirth));
-        return this;
-    }
-
-    /**
-     * Sets the {@code MemberStatus} of the {@code EditPersonDescriptor} that we are building.
-     */
-    public EditPersonDescriptorBuilder withMemberStatus(String memberStatus) {
-        descriptor.setMemberStatus(new MemberStatus(memberStatus));
         return this;
     }
 
