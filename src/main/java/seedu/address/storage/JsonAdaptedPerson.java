@@ -16,7 +16,6 @@ import seedu.address.model.person.DateOfBirth;
 import seedu.address.model.person.Email;
 import seedu.address.model.person.Gender;
 import seedu.address.model.person.MemberId;
-//import seedu.address.model.person.MemberStatus;
 import seedu.address.model.person.MembershipJoinDate;
 import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
@@ -36,7 +35,6 @@ class JsonAdaptedPerson {
     private final String phone;
     private final String gender;
     private final String dateOfBirth;
-    //private final String memberStatus;
     private final String email;
     private final String address;
     private final String type;
@@ -59,7 +57,6 @@ class JsonAdaptedPerson {
         this.phone = phone;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
-        //this.memberStatus = memberStatus;
         this.email = email;
         this.address = address;
         this.type = type;
@@ -78,7 +75,6 @@ class JsonAdaptedPerson {
         phone = source.getPhone().value;
         gender = source.getGender().gender;
         dateOfBirth = source.getDateOfBirth().dateOfBirth;
-        //memberStatus = source.getMemberStatus().memberStatus;
         email = source.getEmail().value;
         address = source.getAddress().value;
         type = source.getMembershipType().toString();
@@ -138,14 +134,6 @@ class JsonAdaptedPerson {
             throw new IllegalValueException(DateOfBirth.MESSAGE_CONSTRAINTS);
         }
         final DateOfBirth modelDateOfBirth = new DateOfBirth(dateOfBirth);
-
-        //        if(memberStatus == null) {
-        //            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, MemberStatus.class.getSimpleName()));
-        //        }
-        //        if (!MemberStatus.isValidMemberStatus(memberStatus)) {
-        //            throw new IllegalValueException(MemberStatus.MESSAGE_CONSTRAINTS);
-        //        }
-        //        final MemberStatus modelMemberStatus = new MemberStatus(memberStatus);
 
         if (email == null) {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Email.class.getSimpleName()));

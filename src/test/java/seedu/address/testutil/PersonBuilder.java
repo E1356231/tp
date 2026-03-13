@@ -29,7 +29,7 @@ public class PersonBuilder {
     public static final String DEFAULT_EMAIL = "amy@gmail.com";
     public static final String DEFAULT_ADDRESS = "123, Jurong West Ave 6, #08-111";
     public static final String DEFAULT_TYPE = "annual";
-    public static final String DEFAULT_JOIN_DATE = "11-Mar-2026";
+    public static final String DEFAULT_JOIN_DATE = "11-03-2026";
 
     private MemberId id;
     private Name name;
@@ -114,10 +114,10 @@ public class PersonBuilder {
         return this;
     }
     /**
-     * Sets the {@code Phone} of the {@code Person} that we are building.
+     * Sets the {@code Id} of the {@code Person} that we are building.
      */
-    public PersonBuilder withId(int id) {
-        this.id = new MemberId(id);
+    public PersonBuilder withId(MemberId id) {
+        this.id = id;
         return this;
     }
 
