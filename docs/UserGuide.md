@@ -6,7 +6,7 @@
 
 # FitDesk User Guide
 
-FitDesk is a **desktop app for managing contacts, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, AB3 can get your contact management tasks done faster than traditional GUI apps.
+FitDesk is a **desktop app for managing memberships, optimized for use via a  Line Interface** (CLI) while still having the benefits of a Graphical User Interface (GUI). If you can type fast, FitDesk can get your membership management tasks done faster than traditional GUI apps.
 
 <!-- * Table of Contents -->
 <page-nav-print />
@@ -31,7 +31,7 @@ FitDesk is a **desktop app for managing contacts, optimized for use via a  Line 
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe p/98765432 g/M d/02022002 m/annual` : Adds a contact named `John Doe` to the Address Book.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -76,11 +76,11 @@ Shows a message explaining how to access the help page.
 Format: `help`
 
 
-### Adding a person: `add`
+### Adding a member: `add`
 
-Adds a person to the address book.
+Adds a member to FitDesk.
 
-Format: `add n/NAME p/PHONE_NUMBER e/EMAIL a/ADDRESS [t/TAG]…​`
+Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE [t/TAG]…​`
 
 <box type="tip" seamless>
 
@@ -91,19 +91,19 @@ Examples:
 * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01`
 * `add n/Betsy Crowe t/friend e/betsycrowe@example.com a/Newgate Prison p/1234567 t/criminal`
 
-### Listing all persons : `list`
+### Listing all members : `list`
 
-Shows a list of all persons in the address book.
+Shows a list of all members in FitDesk.
 
 Format: `list`
 
-### Editing a person : `edit`
+### Editing a member : `edit`
 
-Edits an existing person in the address book.
+Edits an existing member in FItDesk.
 
-Format: `edit INDEX [n/NAME] [p/PHONE] [e/EMAIL] [a/ADDRESS] [t/TAG]…​`
+Format: `edit INDEX [n/NAME] [p/PHONE] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [t/TAG]…​`
 
-* Edits the person at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
+* Edits a member at the specified `INDEX`. The index refers to the index number shown in the displayed person list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
 * Existing values will be updated to the input values.
 * When editing tags, the existing tags of the person will be removed i.e adding of tags is not cumulative.
@@ -114,9 +114,9 @@ Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st person to be `91234567` and `johndoe@example.com` respectively.
 *  `edit 2 n/Betsy Crower t/` Edits the name of the 2nd person to be `Betsy Crower` and clears all existing tags.
 
-### Locating persons by name: `find`
+### Locating members by name: `find`
 
-Finds persons whose names contain any of the given keywords.
+Finds members whose names contain any of the given keywords.
 
 Format: `find KEYWORD [MORE_KEYWORDS]`
 
@@ -132,14 +132,27 @@ Examples:
 * `find alex david` returns `Alex Yeoh`, `David Li`<br>
   ![result for 'find alex david'](images/findAlexDavidResult.png)
 
-### Deleting a person : `delete`
+### Filter members by fields: `filter`
 
-Deletes the specified person from the address book.
+Filters the member list by specified field.
+
+Format: `filter s/STATUS`
+
+* Filters the member at the specified `STATUS`.
+* The status refers to the membership status shown in the displayed member list.
+* The status **must be** valid, invalid …​
+
+Examples:
+* `list` followed by `filter s/valid` displays all valid memberships in FitDesk.
+
+### Deleting a member : `delete`
+
+Deletes the specified member from FitDesk.
 
 Format: `delete INDEX`
 
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
+* Deletes the member at the specified `INDEX`.
+* The index refers to the index number shown in the displayed member list.
 * The index **must be a positive integer** 1, 2, 3, …​
 
 Examples:
