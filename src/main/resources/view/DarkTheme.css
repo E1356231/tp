@@ -75,6 +75,15 @@
 .table-view:focused .table-row-cell:filled:focused:selected {
     -fx-background-color: -fx-focus-color;
 }
+.top-bar {
+    -fx-background-color: #193cb8;
+}
+.top-bar-title {
+    -fx-font-weight: bold;
+    -fx-font-family: Metro;
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+}
 
 .split-pane:horizontal .split-pane-divider {
     -fx-background-color: derive(#1d1d1d, 20%);
