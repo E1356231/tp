@@ -24,7 +24,7 @@ public class MemberDetails extends UiPart<Region> {
     public final Person person;
 
     @FXML
-    private VBox cardPane;
+    private VBox memberCardPane;
     @FXML
     private Label memberId;
     @FXML
