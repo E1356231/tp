@@ -14,11 +14,17 @@ Class UserPrefs
 
 Class UniquePersonList
 Class Person
-Class Address
+Class Date of Birth
 Class Email
+Class Emergency Contact
+Class Expiry Date
+Class Gender
+Class Join Date
 Class Name
 Class Phone
-Class Tag
+Class Membership Type
+Class Member Status
+
 
 Class I #FFFFFF
 }
@@ -39,9 +45,14 @@ AddressBook *--> "1" UniquePersonList
 UniquePersonList --> "~* all" Person
 Person *--> Name
 Person *--> Phone
+Person *--> Gender
+Person *--> Date of Birth
 Person *--> Email
-Person *--> Address
-Person *--> "*" Tag
+Person *--> Membership Type
+Person *--> Emergency Contact
+Person *--> Join Date
+Person *--> Expiry Date
+Person *--> Member Status
 
 Person -[hidden]up--> I
 UniquePersonList -[hidden]right-> I
