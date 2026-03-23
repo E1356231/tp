@@ -109,7 +109,9 @@ Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/ME
 
 Examples:
 *  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st member to be `91234567` and `johndoe@example.com` respectively.
+  ![result for 'edit 1 p/91234567 e/johndoe@example.com'](images/Edit_Example_1.png)
 *  `edit 2 n/Betsy Crower m/annual` Edits the name and membership type of the 2nd member to be `Betsy Crower`and `annual` respectively.
+  ![result for 'edit 2 n/Betsy Crower m/annual'](images/Edit_Example_2.png)
 
 ### Locating persons by name: `find`
 
