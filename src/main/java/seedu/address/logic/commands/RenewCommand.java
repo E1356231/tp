@@ -36,7 +36,7 @@ public class RenewCommand extends Command {
     public static final String MESSAGE_USAGE = COMMAND_WORD + ": Renews membership of member identified "
             + "by the index number used in the displayed list.\n"
             + "Parameters: INDEX (must be a positive integer) "
-            + "[" + PREFIX_MEMBERSHIP_TYPE + "MEMBERSHIP_TYPE] "
+            + "[" + PREFIX_MEMBERSHIP_TYPE + "MEMBERSHIP_TYPE]\n"
             + "Example: " + COMMAND_WORD + " 1 ";
 
     public static final String MESSAGE_RENEW_PERSON_SUCCESS = "Renewed Member: %1$s";
