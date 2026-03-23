@@ -126,7 +126,7 @@ Format: `find QUERY`
 Examples:
 * `find John` returns members with `John` in any field
 * `find john doe` returns members whose name (or other field) contains `"john doe"`<br>
-  ![result for 'find john doe'](images/find_result.png)
+  ![result for 'find john doe'](images/findResult.png)
 * `find 9123` returns members whose phone number or other field contains `9123`
 * `find annual` returns members with `annual` membership type
 
@@ -138,7 +138,7 @@ Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] 
 
 Examples:
 * `filter s/valid` returns list of members with valid memberships
-  ![result for 'filter s/valid'](images/filter_result.png)
+  ![result for 'filter s/valid'](images/filterResult.png)
 
 ### Deleting a person : `delete`
 
