@@ -131,12 +131,6 @@ public class MainWindow extends UiPart<Stage> {
                         memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
                     }
                 });
-        primaryStage.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (personListPanel.getListView().getSelectionModel().getSelectedItem() != null) {
-                personListPanel.getListView().getSelectionModel().clearSelection();
-                memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
-            }
-        });
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -146,6 +140,13 @@ public class MainWindow extends UiPart<Stage> {
 
         CommandBox commandBox = new CommandBox(this::executeCommand);
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        primaryStage.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (personListPanel.getListView().getSelectionModel().getSelectedItem() != null) {
+                personListPanel.getListView().getSelectionModel().clearSelection();
+                memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
+            }
+        });
     }
 
     /**
