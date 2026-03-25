@@ -16,7 +16,6 @@ public class DashBoard extends UiPart<Region> {
     private static final String FXML = "Dashboard.fxml";
 
     private final Logic logic;
-
     @FXML
     private Label memberCount;
     @FXML
@@ -25,6 +24,8 @@ public class DashBoard extends UiPart<Region> {
     private Label annualMembers;
     @FXML
     private Label monthlyMembers;
+//    @FXML
+//    private PieChart typeChart;
     @FXML
     private Label newMembers;
 
@@ -35,6 +36,7 @@ public class DashBoard extends UiPart<Region> {
         super(FXML);
         this.logic = logic;
         update();
+        //setChart();
     }
     private void update() {
         memberCount.textProperty().bind(
@@ -56,10 +58,24 @@ public class DashBoard extends UiPart<Region> {
                 ).asString()
         );
         newMembers.textProperty().bind(
-                Bindings.size(logic.getAddressBook().getPersonList().filtered(
-                                p -> p.getJoinDate().getDate().isEqual(LocalDate.now())
+                Bindings.concat("+",
+                        Bindings.size((logic.getAddressBook().getPersonList().filtered(
+                                        p -> p.getJoinDate().getDate()
+                                                .isAfter(LocalDate.now().minusWeeks(1))
+                                )).filtered(p -> p.getJoinDate().getDate().isBefore(LocalDate.now()))
                         )
-                ).asString()
+                )
         );
     }
+//    private void setChart() {
+//        ObservableList<PieChart.Data> chartData = FXCollections.observableArrayList(
+//                new PieChart.Data("Annual",
+//                        Bindings.size(logic.getAddressBook().getPersonList()
+//                                .filtered(p -> p.getMembershipType().value.equalsIgnoreCase("annual"))).get()),
+//                new PieChart.Data("Monthly",
+//                        Bindings.size(logic.getAddressBook().getPersonList()
+//                                .filtered(p -> p.getMembershipType().value.equalsIgnoreCase("monthly"))).get())
+//        );
+//        typeChart.setData(chartData);
+//    }
 }
