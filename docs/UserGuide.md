@@ -80,7 +80,7 @@ Format: `help`
 
 Adds a member to the member list.
 
-Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL a/EMERGENCY_CONTACT`
+Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT`
 
 <box type="tip" seamless>
 
@@ -111,7 +111,7 @@ Example:
 
 Edits an existing member in the list.
 
-Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [a/EMERGENCY_CONTACT]`
+Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [ec/EMERGENCY_CONTACT]`
 
 * Edits the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -123,23 +123,24 @@ Examples:
 *  `edit 2 n/Betsy Crower m/annual` Edits the name and membership type of the 2nd member to be `Betsy Crower`and `annual` respectively.
   ![result for 'edit 2 n/Betsy Crower m/annual'](images/Edit_Example_2.png)
 
-### Locating persons by name: `find`
+### Locating members by keyword: `find`
 
-Finds members whose names contain any of the given keywords.
+Finds members whose fields contain the search query as a substring.
 
-Format: `find KEYWORD [MORE_KEYWORDS]`
+Format: `find QUERY`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
-* The order of the keywords does not matter. e.g. `Hans Bo` will match `Bo Hans`
-* Only the name is searched.
-* Only full words will be matched e.g. `Han` will not match `Hans`
-* Members matching at least one keyword will be returned (i.e. `OR` search).
-  e.g. `Hans Bo` will return `Hans Gruber`, `Bo Yang`
+* Only text-based fields are searched: name, phone, email, gender, emergency contact, membership type, and membership status.
+  Date-based fields (date of birth, join date, expiry date) are not searchable.
+* The entire query is matched as a literal substring against each field.
+  e.g. `find john doe` will only return members whose field contains `"john doe"`, not members with just `john` or just `doe`
 
 Examples:
-* `find John` returns `john` and `John Doe`
-* `find alex david` returns `Alex Yeoh`, `David Li`<br>
-  ![result for 'find alex david'](images/find_result.png)
+* `find John` returns members with `John` in any field
+* `find john doe` returns members whose name (or other field) contains `"john doe"`<br>
+  ![result for 'find john doe'](images/findResult.png)
+* `find 9123` returns members whose phone number or other field contains `9123`
+* `find annual` returns members with `annual` membership type
 
 ### Filtering members by fields: `filter`
 
@@ -149,7 +150,7 @@ Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] 
 
 Examples:
 * `filter s/valid` returns list of members with valid memberships
-  ![result for 'filter s/valid'](images/filter_result.png)
+  ![result for 'filter s/valid'](images/filterResult.png)
 
 ### Deleting a person : `delete`
 
@@ -224,10 +225,10 @@ _Details coming soon ..._
 
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL a/EMERGENCY_CONTACT ​` <br> e.g., `add n/James Ho p/82224444 g/M d/14-05-2001 m/annual e/jamesho@example.com a/99502281`
+**Add**    | `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT ​` <br> e.g., `add n/James Ho p/82224444 g/M d/14-05-2001 m/annual e/jamesho@example.com ec/99502281`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [a/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee m/monthly e/jameslee@example.com`
+**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [ec/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee m/monthly e/jameslee@example.com`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE]`<br> e.g., `filter s/valid g/M`
 **List**   | `list`
