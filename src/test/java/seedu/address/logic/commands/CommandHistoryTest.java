@@ -40,6 +40,15 @@ public class CommandHistoryTest {
         assertTrue(history.isEmpty());
     }
 
+    @Test
+    public void toStringMethod_includesSizeAndCapacity() {
+        CommandHistory history = new CommandHistory();
+        history.push(new StubCommand("first"));
+
+        String expected = CommandHistory.class.getCanonicalName() + "{historySize=1, capacity=20}";
+        assertEquals(expected, history.toString());
+    }
+
     private static class StubCommand extends Command {
         private final String id;
 
