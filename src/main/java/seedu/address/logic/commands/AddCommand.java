@@ -38,8 +38,8 @@ public class AddCommand extends Command {
             + PREFIX_GENDER + "M "
             + PREFIX_DATEOFBIRTH + "02-02-2002 "
             + PREFIX_EMAIL + "johnd@example.com "
-            + PREFIX_EMERGENCY_CONTACT + "93110225";
-            + PREFIX_MEMBERSHIP_TYPE + "gold";
+            + PREFIX_EMERGENCY_CONTACT + "93110225 "
+            + PREFIX_MEMBERSHIP_TYPE + "monthly";
 
     public static final String MESSAGE_SUCCESS = "New person added: %1$s";
     public static final String MESSAGE_DUPLICATE_PERSON = "This person already exists in the address book";
