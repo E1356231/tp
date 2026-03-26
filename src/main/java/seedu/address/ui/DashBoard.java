@@ -38,20 +38,10 @@ public class DashBoard extends UiPart<Region> {
      */
     public void update() {
         var list = logic.getAddressBook().getPersonList();
-        if (memberCount != null) {
-            memberCount.setText(String.valueOf(DashboardStats.getTotal(list)));
-        }
-        if (annualMembers != null) {
-            annualMembers.setText(String.valueOf(DashboardStats.getAnnual(list)));
-        }
-        if (monthlyMembers != null) {
-            monthlyMembers.setText(String.valueOf(DashboardStats.getMonthly(list)));
-        }
-        if (expiringMemberships != null) {
-            expiringMemberships.setText(String.valueOf(DashboardStats.getExpiring(list)));
-        }
-        if (newMembers != null) {
-            newMembers.setText("+" + DashboardStats.getNewMembers(list));
-        }
+        memberCount.setText(String.valueOf(DashboardStats.getTotal(list)));
+        annualMembers.setText(String.valueOf(DashboardStats.getAnnual(list)));
+        monthlyMembers.setText(String.valueOf(DashboardStats.getMonthly(list)));
+        expiringMemberships.setText(String.valueOf(DashboardStats.getExpiring(list)));
+        newMembers.setText(String.valueOf(DashboardStats.getNewMembers(list)));
     }
 }
