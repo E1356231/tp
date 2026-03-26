@@ -1,8 +1,5 @@
 package seedu.address.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -18,10 +15,9 @@ public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
     private static final String FXML = "CommandBox.fxml";
-    private final List<String> commandHistory = new ArrayList<>();
+    private final CommandHistory commandHistory = new CommandHistory();
 
     private final CommandExecutor commandExecutor;
-    private int historyPointer = 0;
 
     @FXML
     private TextField commandTextField;
@@ -62,7 +58,6 @@ public class CommandBox extends UiPart<Region> {
         try {
             commandExecutor.execute(commandText);
             commandHistory.add(commandText);
-            historyPointer = commandHistory.size();
             commandTextField.setText("");
         } catch (CommandException | ParseException e) {
             setStyleToIndicateCommandFailure();
@@ -107,11 +102,10 @@ public class CommandBox extends UiPart<Region> {
      * The cursor will be at the end of the text in the command box after this function is called.
      */
     private void showPreviousCommand() {
-        if (historyPointer > 0) {
-            historyPointer--;
-            commandTextField.setText(commandHistory.get(historyPointer));
+        commandHistory.previous().ifPresent(previousCommand -> {
+            commandTextField.setText(previousCommand);
             commandTextField.positionCaret(commandTextField.getText().length());
-        }
+        });
     }
 
     /**
@@ -119,14 +113,12 @@ public class CommandBox extends UiPart<Region> {
      * The cursor will be at the end of the text in the command box after this function is called.
      */
     private void showNextCommand() {
-        if (historyPointer < commandHistory.size() - 1) {
-            historyPointer++;
-            commandTextField.setText(commandHistory.get(historyPointer));
+        commandHistory.next().ifPresentOrElse(nextCommand -> {
+            commandTextField.setText(nextCommand);
             commandTextField.positionCaret(commandTextField.getText().length());
-        } else {
-            historyPointer = commandHistory.size();
+        }, () -> {
             commandTextField.setText("");
-        }
+        });
     }
 
 }
