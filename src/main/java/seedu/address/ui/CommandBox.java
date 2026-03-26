@@ -1,5 +1,8 @@
 package seedu.address.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -15,8 +18,10 @@ public class CommandBox extends UiPart<Region> {
 
     public static final String ERROR_STYLE_CLASS = "error";
     private static final String FXML = "CommandBox.fxml";
+    private final List<String> commandHistory = new ArrayList<>();
 
     private final CommandExecutor commandExecutor;
+    private int historyPointer = 0;
 
     @FXML
     private TextField commandTextField;
@@ -29,6 +34,17 @@ public class CommandBox extends UiPart<Region> {
         this.commandExecutor = commandExecutor;
         // calls #setStyleToDefault() whenever there is a change to the text of the command box.
         commandTextField.textProperty().addListener((unused1, unused2, unused3) -> setStyleToDefault());
+
+        commandTextField.setOnKeyPressed(event -> {
+            switch (event.getCode()) {
+                case UP:
+                    showPreviousCommand();
+                    break;
+                case DOWN:
+                    showNextCommand();
+                    break;
+            }
+        });
     }
 
     /**
@@ -43,6 +59,8 @@ public class CommandBox extends UiPart<Region> {
 
         try {
             commandExecutor.execute(commandText);
+            commandHistory.add(commandText);
+            historyPointer = commandHistory.size();
             commandTextField.setText("");
         } catch (CommandException | ParseException e) {
             setStyleToIndicateCommandFailure();
@@ -80,6 +98,33 @@ public class CommandBox extends UiPart<Region> {
          * @see seedu.address.logic.Logic#execute(String)
          */
         CommandResult execute(String commandText) throws CommandException, ParseException;
+    }
+
+    /**
+     * Represents a function that shows the previous command in the command history.
+     * The cursor will be at the end of the text in the command box after this function is called.
+     */
+    private void showPreviousCommand() {
+        if (historyPointer > 0) {
+            historyPointer--;
+            commandTextField.setText(commandHistory.get(historyPointer));
+            commandTextField.positionCaret(commandTextField.getText().length());
+        }
+    }
+
+    /**
+     * Represents a function that shows the next command in the command history.
+     * The cursor will be at the end of the text in the command box after this function is called.
+     */
+    private void showNextCommand() {
+        if (historyPointer < commandHistory.size() - 1) {
+            historyPointer++;
+            commandTextField.setText(commandHistory.get(historyPointer));
+            commandTextField.positionCaret(commandTextField.getText().length());
+        } else {
+            historyPointer = commandHistory.size();
+            commandTextField.setText("");
+        }
     }
 
 }
