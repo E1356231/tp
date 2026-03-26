@@ -1,8 +1,5 @@
 package seedu.address.ui;
 
-import java.time.LocalDate;
-
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
@@ -45,6 +42,6 @@ public class DashBoard extends UiPart<Region> {
         annualMembers.setText(String.valueOf(DashboardStats.getAnnual(list)));
         monthlyMembers.setText(String.valueOf(DashboardStats.getMonthly(list)));
         expiringMemberships.setText(String.valueOf(DashboardStats.getExpiring(list)));
-        newMembers.setText("+" + String.valueOf(DashboardStats.getNewMembers(list)));
+        newMembers.setText("+" + DashboardStats.getNewMembers(list));
     }
 }
