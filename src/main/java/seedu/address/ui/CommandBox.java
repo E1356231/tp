@@ -37,12 +37,14 @@ public class CommandBox extends UiPart<Region> {
 
         commandTextField.setOnKeyPressed(event -> {
             switch (event.getCode()) {
-                case UP:
-                    showPreviousCommand();
-                    break;
-                case DOWN:
-                    showNextCommand();
-                    break;
+            case UP:
+                showPreviousCommand();
+                break;
+            case DOWN:
+                showNextCommand();
+                break;
+            default:
+                break;
             }
         });
     }
