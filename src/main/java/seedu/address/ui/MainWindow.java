@@ -8,6 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
@@ -34,17 +35,19 @@ public class MainWindow extends UiPart<Stage> {
     private PersonListPanel personListPanel;
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
+    private DashBoard dashBoard;
 
     @FXML
     private StackPane commandBoxPlaceholder;
 
     @FXML
     private MenuItem helpMenuItem;
-
     @FXML
     private StackPane personListPanelPlaceholder;
     @FXML
     private StackPane memberDetailsPlaceholder;
+    @FXML
+    private StackPane dashboardPlaceholder;
 
     @FXML
     private StackPane resultDisplayPlaceholder;
@@ -115,14 +118,25 @@ public class MainWindow extends UiPart<Stage> {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
+        dashBoard = new DashBoard(logic);
+        memberDetailsPlaceholder.getChildren().add(dashBoard.getRoot());
+
         personListPanel.getListView().getSelectionModel()
                 .selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         memberDetailsPlaceholder.getChildren().setAll(
                                 new MemberDetails(newValue).getRoot());
+                    } else {
+                        memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
                     }
                 });
+        primaryStage.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            if (personListPanel.getListView().getSelectionModel().getSelectedItem() != null) {
+                personListPanel.getListView().getSelectionModel().clearSelection();
+                memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
+            }
+        });
 
         resultDisplay = new ResultDisplay();
         resultDisplayPlaceholder.getChildren().add(resultDisplay.getRoot());
@@ -186,8 +200,16 @@ public class MainWindow extends UiPart<Stage> {
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
             CommandResult commandResult = logic.execute(commandText);
+
+            if (commandResult.getPersonToSelect() != null) {
+                personListPanel.selectPerson(commandResult.getPersonToSelect());
+            }
+
             logger.info("Result: " + commandResult.getFeedbackToUser());
             resultDisplay.setFeedbackToUser(commandResult.getFeedbackToUser());
+            if (dashBoard != null) {
+                dashBoard.update();
+            }
 
             if (commandResult.isShowHelp()) {
                 handleHelp();
@@ -203,9 +225,5 @@ public class MainWindow extends UiPart<Stage> {
             resultDisplay.setFeedbackToUser(e.getMessage());
             throw e;
         }
-    }
-
-    public void setPersonListPanelPlaceholder(StackPane personListPanelPlaceholder) {
-        this.personListPanelPlaceholder = personListPanelPlaceholder;
     }
 }

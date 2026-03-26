@@ -26,12 +26,12 @@ FitDesk is a **desktop app for front-desk receptionists** at small-to-medium pri
    A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
    ![Ui](images/Ui.png)
 
-1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window.<br>
+1. Type the command in the command box and press Enter to execute it. e.g. typing **`help`** and pressing Enter will open the help window. Use the `Up` and `Down` arrow keys (when the command box is focused) to cycle through previously entered commands.<br>
    Some example commands you can try:
 
    * `list` : Lists all contacts.
 
-   * `add n/John Doe p/98765432 e/johnd@example.com a/John street, block 123, #01-01` : Adds a contact named `John Doe` to the Address Book.
+   * `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com ec/98723347` : Adds a member named `John Doe` to the member list.
 
    * `delete 3` : Deletes the 3rd contact shown in the current list.
 
@@ -88,7 +88,7 @@ Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/
 </box>
 
 Examples:
-* `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com a/98723347`
+* `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com ec/98723347`
 
 ![add new member](images/add_member.png)
 
@@ -96,7 +96,7 @@ A new member `John Doe` is added to the member list
 
 ![added member](images/added.png)
 
-* `add n/Betsy Crowe m/monthly a/93349011 e/betsycrowe@example.com g/F d/28-01-2002 p/1234567`
+* `add n/Betsy Crowe m/monthly ec/93349011 e/betsycrowe@example.com g/F d/28-01-2002 p/91234567`
 
 ### Listing all persons : `list`
 
@@ -146,13 +146,13 @@ Examples:
 
 Filters member list and displays members who have fields matching the given attribute.
 
-Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE]`
+Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`
 
 Examples:
 * `filter s/valid` returns list of members with valid memberships
   ![result for 'filter s/valid'](images/filterResult.png)
 
-### Deleting a person : `delete`
+### Deleting a member : `delete`
 
 Deletes the specified member from the list.
 
@@ -174,11 +174,92 @@ Examples:
   
 * `find Alex` followed by `delete 1` deletes the 1st person in the results of the `find` command.
 
+### Renewing a membership: `renew`
+
+Renews specified member's membership.
+
+Format: `renew INDEX [m/MEMBERSHIP_TYPE]`
+
+* Renews the member's membership at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
+* `MEMBERSHIP_TYPE` is an optional field.
+* Expiry date will be updated.
+* Membership type will be updated if included in the command.
+
+Examples:
+* `renew 2` renews membership of the 2nd member in the list to `11-04-2026`
+* `renew 1 m/monthly` renews membership and updates membership type of the 1st member in the list to `11-04-2027` and `Monthly` respectively.
+
+### Adding a remark to a member : `remark`
+
+Adds or edits a remark for the specified member.
+
+Format: `remark INDEX r/[REMARK]`
+
+* Edits the remark of the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
+* Existing remark will be overwritten by the input.
+* Providing an empty remark (i.e. `r/` with nothing after it) removes the remark from the member.
+
+Examples:
+* `remark 1 r/Likes to swim.` adds the remark `Likes to swim.` to the 1st member.
+  ![remark added](images/remark.png)
+* `remark 2 r/` removes the remark from the 2nd member.
+
+### Viewing the details of a person : `details`
+
+Shows the details of the specified member from the list.
+
+Format: `details INDEX`
+
+* Shows the details of the person at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …​
+
+Examples:
+* `list` followed by `details 1` shows the details of the 1st member in the address book.
+  1. `list`
+    
+        ![list of members](images/details_list1.png)
+  
+  2. `details 1`
+  
+        ![details of 1st member](images/details_1.png)
+
+* `find David` followed by `details 1` shows the details of the 1st member in the results of the `find` command.
+
+  ![details of 1st member in find results](images/details_2.png)
+
+
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
 
 Format: `clear`
+
+### Undoing the last command : `undo`
+
+Undoes the most recent undoable command (add, edit, delete, clear).
+
+Format: `undo`
+
+Example:
+* `undo`
+
+  ![before undo](images/undo_before.png)
+
+  ![after undo](images/undo_after.png)
+
+### Navigating command history
+
+Allows you to quickly re-use previously entered commands using the arrow keys in the command box.
+
+* Press the `Up` arrow key to navigate to the previous command in history.
+* Press the `Down` arrow key to navigate to the next command in history.
+* The cursor will be placed at the end of the text after navigating.
+* Pressing `Down` past the most recent command clears the command box.
+
+![navigating to previous command](images/command_history_down.png)
+
+![navigating to next command](images/command_history_up.png)
 
 ### Exiting the program : `exit`
 
@@ -230,6 +311,10 @@ Action     | Format, Examples
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [ec/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee m/monthly e/jameslee@example.com`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE]`<br> e.g., `filter s/valid g/M`
+**Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`<br> e.g., `filter s/valid g/M`
+**Remark**  | `remark INDEX r/[REMARK]`<br> e.g., `remark 1 r/Likes to swim.`
+**Renew**   | `renew INDEX [m/MEMBERSHIP_TYPE] ]`<br> e.g., `renew 2 m/monthly`
+**Details**   | `details INDEX`<br> e.g., `details 1`
 **List**   | `list`
+**Undo**   | `undo`
 **Help**   | `help`
