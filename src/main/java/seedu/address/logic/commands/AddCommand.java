@@ -61,18 +61,16 @@ public class AddCommand extends Command {
 
         boolean isPhoneDuplicate = false;
         boolean isEmailDuplicate = false;
-        boolean isNameDuplicate = false;
 
         for (Person existingPerson : model.getAddressBook().getPersonList()) {
             isPhoneDuplicate = isPhoneDuplicate || existingPerson.getPhone().equals(toAdd.getPhone());
             isEmailDuplicate = isEmailDuplicate || existingPerson.getEmail().equals(toAdd.getEmail());
-            isNameDuplicate = isNameDuplicate || existingPerson.getName().equals(toAdd.getName());
         }
 
-        if (isPhoneDuplicate || isEmailDuplicate || isNameDuplicate) {
+        if (isPhoneDuplicate || isEmailDuplicate) {
             GenerateMemberIds.decrementMaxId();
             throw new CommandException(String.format(MESSAGE_DUPLICATE_FIELDS,
-                    formatDuplicateFields(isNameDuplicate, isPhoneDuplicate, isEmailDuplicate)));
+                    formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate)));
         }
 
         model.addPerson(toAdd);
@@ -119,39 +117,13 @@ public class AddCommand extends Command {
                 .toString();
     }
 
-    private static String formatDuplicateFields(boolean isNameDuplicate, boolean isPhoneDuplicate,
-                                                    boolean isEmailDuplicate) {
-        int duplicateCount = 0;
-        if (isNameDuplicate) {
-            duplicateCount++;
-        }
-        if (isPhoneDuplicate) {
-            duplicateCount++;
-        }
-        if (isEmailDuplicate) {
-            duplicateCount++;
-        }
-
-        if (duplicateCount == 1) {
-            if (isNameDuplicate) {
-                return "name";
-            }
-            if (isPhoneDuplicate) {
-                return "phone";
-            }
-            return "email";
-        }
-
-        if (duplicateCount == 2) {
-            if (isNameDuplicate && isPhoneDuplicate) {
-                return "name and phone";
-            }
-            if (isNameDuplicate) {
-                return "name and email";
-            }
+    private static String formatDuplicateFields(boolean isPhoneDuplicate, boolean isEmailDuplicate) {
+        if (isPhoneDuplicate && isEmailDuplicate) {
             return "phone and email";
         }
-
-        return "name, phone and email";
+        if (isPhoneDuplicate) {
+            return "phone";
+        }
+        return "email";
     }
 }

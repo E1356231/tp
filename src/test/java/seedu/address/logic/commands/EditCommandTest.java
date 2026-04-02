@@ -110,7 +110,7 @@ public class EditCommandTest {
         EditCommand editCommand = new EditCommand(INDEX_SECOND_PERSON, descriptor);
 
         assertCommandFailure(editCommand, model,
-                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "name, phone and email"));
+                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "phone and email"));
     }
 
     @Test
@@ -123,7 +123,7 @@ public class EditCommandTest {
                 new EditPersonDescriptorBuilder(personInList).build());
 
         assertCommandFailure(editCommand, model,
-                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "name, phone and email"));
+                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "phone and email"));
     }
 
     @Test
@@ -150,35 +150,6 @@ public class EditCommandTest {
                 new EditPersonDescriptorBuilder().withName(VALID_NAME_BOB).build());
 
         assertCommandFailure(editCommand, model, Messages.MESSAGE_INVALID_PERSON_DISPLAYED_INDEX);
-    }
-
-    @Test
-    public void execute_duplicateNameOnly_throwsCommandException() {
-        Person personA = new PersonBuilder()
-                .withId(new MemberId(1))
-                .withName("Alice A")
-                .withPhone("85355255")
-                .withEmail("alicea@gmail.com")
-                .build();
-        Person personB = new PersonBuilder()
-                .withId(new MemberId(2))
-                .withName("Bob B")
-                .withPhone("94351253")
-                .withEmail("bobb@gmail.com")
-                .build();
-
-        AddressBook addressBook = new AddressBook();
-        addressBook.addPerson(personA);
-        addressBook.addPerson(personB);
-
-        Model model = new ModelManager(addressBook, new UserPrefs());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(personA.getName().toString())
-                .build();
-        EditCommand editCommand = new EditCommand(Index.fromOneBased(2), descriptor);
-
-        assertCommandFailure(editCommand, model,
-                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "name"));
     }
 
     @Test
@@ -237,66 +208,6 @@ public class EditCommandTest {
 
         assertCommandFailure(editCommand, model,
                 String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "email"));
-    }
-
-    @Test
-    public void execute_duplicateNameAndPhone_throwsCommandException() {
-        Person personA = new PersonBuilder()
-                .withId(new MemberId(1))
-                .withName("Alice A")
-                .withPhone("85355255")
-                .withEmail("alicea@gmail.com")
-                .build();
-        Person personB = new PersonBuilder()
-                .withId(new MemberId(2))
-                .withName("Bob B")
-                .withPhone("94351253")
-                .withEmail("bobb@gmail.com")
-                .build();
-
-        AddressBook addressBook = new AddressBook();
-        addressBook.addPerson(personA);
-        addressBook.addPerson(personB);
-
-        Model model = new ModelManager(addressBook, new UserPrefs());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(personA.getName().toString())
-                .withPhone(personA.getPhone().toString())
-                .build();
-        EditCommand editCommand = new EditCommand(Index.fromOneBased(2), descriptor);
-
-        assertCommandFailure(editCommand, model,
-                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "name and phone"));
-    }
-
-    @Test
-    public void execute_duplicateNameAndEmail_throwsCommandException() {
-        Person personA = new PersonBuilder()
-                .withId(new MemberId(1))
-                .withName("Alice A")
-                .withPhone("85355255")
-                .withEmail("alicea@gmail.com")
-                .build();
-        Person personB = new PersonBuilder()
-                .withId(new MemberId(2))
-                .withName("Bob B")
-                .withPhone("94351253")
-                .withEmail("bobb@gmail.com")
-                .build();
-
-        AddressBook addressBook = new AddressBook();
-        addressBook.addPerson(personA);
-        addressBook.addPerson(personB);
-
-        Model model = new ModelManager(addressBook, new UserPrefs());
-        EditPersonDescriptor descriptor = new EditPersonDescriptorBuilder()
-                .withName(personA.getName().toString())
-                .withEmail(personA.getEmail().toString())
-                .build();
-        EditCommand editCommand = new EditCommand(Index.fromOneBased(2), descriptor);
-
-        assertCommandFailure(editCommand, model,
-                String.format(EditCommand.MESSAGE_DUPLICATE_FIELDS, "name and email"));
     }
 
     @Test
