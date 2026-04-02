@@ -53,7 +53,9 @@ public class AddCommandTest {
         AddCommand addCommand = new AddCommand(validPerson);
         ModelStub modelStub = new ModelStubWithPerson(validPerson);
 
-        assertThrows(CommandException.class, AddCommand.MESSAGE_DUPLICATE_PERSON, () -> addCommand.execute(modelStub));
+        assertThrows(CommandException.class,
+                String.format(AddCommand.MESSAGE_DUPLICATE_FIELDS, "name, phone and email"), () ->
+                        addCommand.execute(modelStub));
     }
 
     @Test
@@ -207,6 +209,13 @@ public class AddCommandTest {
         ModelStubWithPerson(Person person) {
             requireNonNull(person);
             this.person = person;
+        }
+
+        @Override
+        public ReadOnlyAddressBook getAddressBook() {
+            AddressBook addressBook = new AddressBook();
+            addressBook.addPerson(person);
+            return addressBook;
         }
 
         @Override
