@@ -75,7 +75,7 @@ public class PersonContainsKeywordsPredicateTest {
 
         // Membership ID match
         predicate = new PersonContainsKeywordsPredicate(Collections.singletonList("m08"));
-        assertTrue(predicate.test(new PersonBuilder().withRemark("M085").build()));
+        assertTrue(predicate.test(new PersonBuilder().withId(new MemberId(85)).build()));
 
         // Case-insensitive match
         predicate = new PersonContainsKeywordsPredicate(Collections.singletonList("AMY BEE"));
