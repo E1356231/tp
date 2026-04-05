@@ -11,6 +11,11 @@ public class MemberStatus {
 
     public final String memberStatus;
 
+    public static final String MESSAGE_CONSTRAINTS =
+            "Membership status should only be 'Valid' or 'Invalid'";
+
+    public static final String VALIDATION_REGEX = "(?i)^(Valid|Invalid)$";
+
     /**
      * Constructs a {@code MemberStatus}.
      *
@@ -23,6 +28,13 @@ public class MemberStatus {
         } else {
             this.memberStatus = "Valid";
         }
+    }
+
+    /**
+     * Returns true if a given string is a valid status
+     */
+    public static boolean isValidStatus(String test) {
+        return test.matches(VALIDATION_REGEX);
     }
 
     @Override
