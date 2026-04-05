@@ -90,7 +90,6 @@ public class EditCommand extends Command {
 
         boolean isPhoneDuplicate = false;
         boolean isEmailDuplicate = false;
-        boolean isNameDuplicate = false;
 
         for (Person existingPerson : model.getAddressBook().getPersonList()) {
             // Skip checking duplicates against the person being edited.
@@ -100,12 +99,11 @@ public class EditCommand extends Command {
 
             isPhoneDuplicate = isPhoneDuplicate || existingPerson.getPhone().equals(updatedPerson.getPhone());
             isEmailDuplicate = isEmailDuplicate || existingPerson.getEmail().equals(updatedPerson.getEmail());
-            isNameDuplicate = isNameDuplicate || existingPerson.getName().equals(updatedPerson.getName());
         }
 
-        if (isPhoneDuplicate || isEmailDuplicate || isNameDuplicate) {
+        if (isPhoneDuplicate || isEmailDuplicate) {
             throw new CommandException(String.format(MESSAGE_DUPLICATE_FIELDS,
-                    formatDuplicateFields(isNameDuplicate, isPhoneDuplicate, isEmailDuplicate)));
+                    formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate)));
         }
 
         try {
@@ -123,7 +121,6 @@ public class EditCommand extends Command {
     private static String getDuplicateMessage(Person personToEdit, Person updatedPerson, Model model) {
         boolean isPhoneDuplicate = false;
         boolean isEmailDuplicate = false;
-        boolean isNameDuplicate = false;
 
         for (Person existingPerson : model.getAddressBook().getPersonList()) {
             if (existingPerson == personToEdit) {
@@ -132,47 +129,20 @@ public class EditCommand extends Command {
 
             isPhoneDuplicate = isPhoneDuplicate || existingPerson.getPhone().equals(updatedPerson.getPhone());
             isEmailDuplicate = isEmailDuplicate || existingPerson.getEmail().equals(updatedPerson.getEmail());
-            isNameDuplicate = isNameDuplicate || existingPerson.getName().equals(updatedPerson.getName());
         }
 
         return String.format(MESSAGE_DUPLICATE_FIELDS,
-                formatDuplicateFields(isNameDuplicate, isPhoneDuplicate, isEmailDuplicate));
+                formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate));
     }
 
-    private static String formatDuplicateFields(boolean isNameDuplicate, boolean isPhoneDuplicate,
-                                                    boolean isEmailDuplicate) {
-        int duplicateCount = 0;
-        if (isNameDuplicate) {
-            duplicateCount++;
-        }
-        if (isPhoneDuplicate) {
-            duplicateCount++;
-        }
-        if (isEmailDuplicate) {
-            duplicateCount++;
-        }
-
-        if (duplicateCount == 1) {
-            if (isNameDuplicate) {
-                return "name";
-            }
-            if (isPhoneDuplicate) {
-                return "phone";
-            }
-            return "email";
-        }
-
-        if (duplicateCount == 2) {
-            if (isNameDuplicate && isPhoneDuplicate) {
-                return "name and phone";
-            }
-            if (isNameDuplicate) {
-                return "name and email";
-            }
+    private static String formatDuplicateFields(boolean isPhoneDuplicate, boolean isEmailDuplicate) {
+        if (isPhoneDuplicate && isEmailDuplicate) {
             return "phone and email";
         }
-
-        return "name, phone and email";
+        if (isPhoneDuplicate) {
+            return "phone";
+        }
+        return "email";
     }
 
     @Override

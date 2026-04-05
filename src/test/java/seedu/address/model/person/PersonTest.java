@@ -31,8 +31,12 @@ public class PersonTest {
                 .withEmergencyContact(VALID_EMERGENCY_CONTACT_BOB).build();
         assertTrue(ALICE.isSamePerson(editedAlice));
 
-        // different phone, all other attributes same -> returns false
+        // different phone, all other attributes same -> returns true (same email)
         editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).build();
+        assertTrue(ALICE.isSamePerson(editedAlice));
+
+        // different phone and different email, all other attributes same -> returns false
+        editedAlice = new PersonBuilder(ALICE).withPhone(VALID_PHONE_BOB).withEmail(VALID_EMAIL_BOB).build();
         assertFalse(ALICE.isSamePerson(editedAlice));
 
         // name differs in case, all other attributes same -> returns false
