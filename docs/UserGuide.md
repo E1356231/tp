@@ -295,6 +295,7 @@ Clears all entries from the address book.
 
 Format: `clear`
 
+
 ### Undoing the last command : `undo`
 
 Undoes the most recent undoable command (add, edit, delete, clear).
@@ -302,11 +303,11 @@ Undoes the most recent undoable command (add, edit, delete, clear).
 Format: `undo`
 
 Example:
-* `undo`
+* `delete 4` followed by `undo`
+![before undo](images/screenshots/undo_1.png)
+![after undo](images/screenshots/undo_2.png)
+The deleted member is restored after undo
 
-  ![before undo](images/screenshots/undo_before.png)
-
-  ![after undo](images/screenshots/undo_after.png)
 
 ### Navigating command history
 
@@ -318,8 +319,8 @@ Allows you to quickly re-use previously entered commands using the arrow keys in
 * Pressing `Down` past the most recent command clears the command box.
 
 ![navigating to previous command](images/screenshots/command_history_down.png)
-
 ![navigating to next command](images/screenshots/command_history_up.png)
+
 
 ### Exiting the program : `exit`
 
