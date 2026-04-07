@@ -214,19 +214,15 @@ Format: `delete INDEX`
 
 * Deletes the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+* The index **must be a positive integer** 1, 2, 3, …
 
-Examples:
+Example:
 * `list` followed by `delete 2` deletes the 2nd person in the address book.
   1. `list`
-  
-     ![list](images/screenshots/list_2.png)
-  
-  2. `delete 2`
-  
+  ![list](images/screenshots/delete_1.png)
+  2. `delete 2` 
   ![deleted member](images/screenshots/delete_2.png)
-  
-* `find Alex` followed by `delete 1` deletes the 1st person in the results of the `find` command.
+
 
 ### Renewing a membership: `renew`
 
