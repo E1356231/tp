@@ -31,6 +31,7 @@ import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Remark;
 import seedu.address.model.person.exceptions.DuplicatePersonException;
 
 /**
@@ -115,7 +116,8 @@ public class EditCommand extends Command {
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
         originalPerson = personToEdit;
         editedPerson = updatedPerson;
-        return new CommandResult(String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(updatedPerson)));
+        return new CommandResult(
+                String.format(MESSAGE_EDIT_PERSON_SUCCESS, Messages.format(updatedPerson)), editedPerson);
     }
 
     private static String getDuplicateMessage(Person personToEdit, Person updatedPerson, Model model) {
@@ -184,9 +186,10 @@ public class EditCommand extends Command {
         MembershipType updatedType = editPersonDescriptor.getType().orElse(personToEdit.getMembershipType());
         MembershipJoinDate joinDate = personToEdit.getJoinDate();
         MembershipExpiryDate expiryDate = personToEdit.getExpiryDate();
+        Remark remark = personToEdit.getRemark();
 
         return new Person(memberId, updatedName, updatedPhone, updatedGender, updatedDateOfBirth, updatedEmail,
-                updatedEmergencyContact, updatedType, joinDate, expiryDate);
+                updatedEmergencyContact, updatedType, joinDate, expiryDate, remark);
     }
 
     @Override
