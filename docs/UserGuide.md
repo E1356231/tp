@@ -239,11 +239,16 @@ Format: `renew INDEX [m/MEMBERSHIP_TYPE]`
 
 Examples:
 * `renew 2`
-![renewed member](images/screenshots/renew_1.png)
-The 2nd member's expiry date is changed to `11-04-2026`
-* `renew 1 m/monthly`
-![renewed member with different membership type](images/screenshots/renew_2.png)
-The 1st member's membership type is changed to `Monthly`, so the expiry date becomes `11-04-2027`
+![before renew](images/screenshots/renew_1.png)
+![after renew](images/screenshots/renew_2.png)
+The 2nd member's expiry date is changed from `11-09-26` to `11-10-2026`
+* `renew 4 m/monthly`
+![before renew monthly](images/screenshots/renew_3.png)
+![after renew monthly](images/screenshots/renew_4.png)
+The 4th member's membership type is changed from `Annual` to `Monthly`, so the expiry date is changed from `21-01-2027` to `21-02-2027`
+* `renew 1`
+![renew failed](images/screenshots/renew_5.png)
+The 1st member is failed to be renewed since its membership has expired
 
 
 ### Adding a remark to a member : `remark`
