@@ -112,13 +112,14 @@ Refer to the [**Features**](#features) section below for full details of each co
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </box>
 
+
 ### Viewing help : `help`
 
 Shows a message explaining how to access the help page.
 
-![help message](images/screenshots/help_1.png)
-
 Format: `help`
+
+![help message](images/screenshots/help_1.png)
 
 
 ### Adding a member: `add`
@@ -136,19 +137,22 @@ Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/
 * **Names** do not need to be unique; different members are allowed to have the same name as long as their phone and email differ.
 * If you try to add someone whose phone or email matches an existing member, the command is rejected and the error message indicates which field is duplicated.
 
-Examples:
+Example:
 * `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com ec/98723347`
 ![added member](images/screenshots/add_1.png)
 A new member `John Doe` is added to the member list
 
-### Listing all persons : `list`
+
+### Listing all members : `list`
 
 Shows a list of all members in the list.
 
 Format: `list`
 
 Example:
-![list](images/screenshots/list.png)
+* `list`
+![members listed](images/screenshots/list_1.png)
+
 
 ### Editing a person : `edit`
 
