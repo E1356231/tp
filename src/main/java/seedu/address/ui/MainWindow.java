@@ -4,10 +4,14 @@ import java.util.logging.Logger;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import seedu.address.commons.core.GuiSettings;
@@ -36,6 +40,13 @@ public class MainWindow extends UiPart<Stage> {
     private ResultDisplay resultDisplay;
     private HelpWindow helpWindow;
     private DashBoard dashBoard;
+    private CommandBox commandBox;
+
+    @FXML
+    private HBox headerBar;
+
+    @FXML
+    private MenuBar menuBar;
 
     @FXML
     private StackPane commandBoxPlaceholder;
@@ -118,6 +129,8 @@ public class MainWindow extends UiPart<Stage> {
         personListPanel = new PersonListPanel(logic.getFilteredPersonList());
         personListPanelPlaceholder.getChildren().add(personListPanel.getRoot());
 
+        headerBar.setOnMouseClicked(event -> handleHome());
+
         dashBoard = new DashBoard(logic);
         memberDetailsPlaceholder.getChildren().add(dashBoard.getRoot());
 
@@ -126,11 +139,9 @@ public class MainWindow extends UiPart<Stage> {
                 .addListener((observable, oldValue, newValue) -> {
                     if (newValue != null) {
                         currMemberDetails = new MemberDetails(newValue);
-                        currMemberDetails.getRoot().setOnMouseClicked(e -> {
-                            personListPanel.getListView().getSelectionModel().clearSelection();
-                            memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
-                        });
                         memberDetailsPlaceholder.getChildren().setAll(currMemberDetails.getRoot());
+                    } else {
+                        memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
                     }
                 });
 
@@ -140,8 +151,53 @@ public class MainWindow extends UiPart<Stage> {
         StatusBarFooter statusBarFooter = new StatusBarFooter(logic.getAddressBookFilePath());
         statusbarPlaceholder.getChildren().add(statusBarFooter.getRoot());
 
-        CommandBox commandBox = new CommandBox(this::executeCommand);
+        commandBox = new CommandBox(this::executeCommand, () -> logic.getFilteredPersonList().size());
         commandBoxPlaceholder.getChildren().add(commandBox.getRoot());
+
+        getRoot().addEventFilter(KeyEvent.KEY_TYPED, event -> {
+            if (commandBox.isFocused()) {
+                return;
+            }
+            String character = event.getCharacter();
+            if (character.isEmpty() || character.charAt(0) < 32 || character.charAt(0) == 127) {
+                return;
+            }
+            commandBox.focusAndType(character);
+            event.consume();
+        });
+
+        getRoot().addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == javafx.scene.input.KeyCode.ESCAPE) {
+                personListPanel.getListView().getSelectionModel().clearSelection();
+            }
+        });
+
+        getRoot().addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            Node target = (Node) event.getTarget();
+            if (isDescendantOf(target, personListPanelPlaceholder)
+                    || isDescendantOf(target, memberDetailsPlaceholder)
+                    || isDescendantOf(target, commandBoxPlaceholder)
+                    || isDescendantOf(target, resultDisplayPlaceholder)
+                    || isDescendantOf(target, menuBar)
+                    || isDescendantOf(target, headerBar)) {
+                return;
+            }
+            personListPanel.getListView().getSelectionModel().clearSelection();
+        });
+    }
+
+    /**
+     * Checks if the given node is a descendant of the specified ancestor.
+     */
+    private boolean isDescendantOf(Node node, Node ancestor) {
+        Node current = node;
+        while (current != null) {
+            if (current == ancestor) {
+                return true;
+            }
+            current = current.getParent();
+        }
+        return false;
     }
 
     /**
@@ -165,6 +221,17 @@ public class MainWindow extends UiPart<Stage> {
             helpWindow.show();
         } else {
             helpWindow.focus();
+        }
+    }
+
+    /**
+     * Resets the view to show all members and the dashboard.
+     */
+    private void handleHome() {
+        try {
+            executeCommand("list");
+        } catch (CommandException | ParseException e) {
+            logger.info("Home action failed: " + e.getMessage());
         }
     }
 
@@ -196,6 +263,9 @@ public class MainWindow extends UiPart<Stage> {
     private CommandResult executeCommand(String commandText) throws CommandException, ParseException {
         try {
             CommandResult commandResult = logic.execute(commandText);
+
+            personListPanel.getListView().getSelectionModel().clearSelection();
+            memberDetailsPlaceholder.getChildren().setAll(dashBoard.getRoot());
 
             if (commandResult.getPersonToSelect() != null) {
                 personListPanel.selectPerson(commandResult.getPersonToSelect());

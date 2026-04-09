@@ -48,7 +48,7 @@ FitDesk is a **desktop app for front-desk receptionists** at small-to-medium pri
 
 A GUI similar to the below should appear in a few seconds. Note how the app contains some sample data.<br>
 
-   ![Ui](images/Ui.png)
+![Ui](images/Ui.png)
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -65,6 +65,7 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
    > 💡 **Tip:** 
    > 
     >- Use the **Up** and **Down** arrow keys to cycle through previously entered commands.
+    >- Press **Tab** in the command box to auto-complete command words, field prefixes, and values.
 ---
 **Try these example commands:**
 
@@ -88,7 +89,11 @@ Refer to the [**Features**](#features) section below for full details of each co
 
 --------------------------------------------------------------------------------------------------------------------
 
-## Features
+## Commands
+
+FitDesk supports the following commands. Click on a command to learn more.
+
+> 💡 **Tip:** See the [**Keyboard Features**](#keyboard-features) section for shortcuts like tab completion, command history, and member list navigation.
 
 <box type="info" seamless>
 
@@ -112,13 +117,19 @@ Refer to the [**Features**](#features) section below for full details of each co
 * If you are using a PDF version of this document, be careful when copying and pasting commands that span multiple lines as space characters surrounding line-breaks may be omitted when copied over to the application.
 </box>
 
+
+## Basic Commands
+
 ### Viewing help : `help`
 
-Shows a message explaining how to access the help page.
-
-![help message](images/helpMessage.png)
+Shows a message explaining how to access the help page through a pop-up window.
 
 Format: `help`
+
+Example:
+* `help`
+![help message](images/screenshots/help_1.png)
+Help message is shown 
 
 
 ### Adding a member: `add`
@@ -136,25 +147,23 @@ Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/
 * **Names** do not need to be unique; different members are allowed to have the same name as long as their phone and email differ.
 * If you try to add someone whose phone or email matches an existing member, the command is rejected and the error message indicates which field is duplicated.
 
-Examples:
+Example:
 * `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com ec/98723347`
-
-![add new member](images/add_member.png)
-
+![added member](images/screenshots/add_1.png)
 A new member `John Doe` is added to the member list
 
-![added member](images/added.png)
 
-* `add n/Betsy Crowe m/monthly ec/93349011 e/betsycrowe@example.com g/F d/28-01-2002 p/91234567`
-
-### Listing all persons : `list`
+### Listing all members : `list`
 
 Shows a list of all members in the list.
 
 Format: `list`
 
 Example:
-![list](images/list.png)
+* `list`
+![members listed](images/screenshots/list_1.png)
+All members are listed
+
 
 ### Editing a person : `edit`
 
@@ -167,11 +176,32 @@ Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/ME
 * Existing values will be updated to the input values.
 * After editing, the member’s **phone** and **email** must still be unique among all other members (same rules as `add`). **Names** may match another member’s name.
 
-Examples:
-*  `edit 1 p/91234567 e/johndoe@example.com` Edits the phone number and email address of the 1st member to be `91234567` and `johndoe@example.com` respectively.
-  ![result for 'edit 1 p/91234567 e/johndoe@example.com'](images/Edit_Example_1.png)
-*  `edit 2 n/Betsy Crower m/annual` Edits the name and membership type of the 2nd member to be `Betsy Crower`and `annual` respectively.
-  ![result for 'edit 2 n/Betsy Crower m/annual'](images/Edit_Example_2.png)
+Example:
+*  `edit 7 p/91234567 e/johndoe@example.com`
+![result for 'edit 1 p/91234567 e/johndoe@example.com'](images/screenshots/edit_1.png)
+The phone number and email address of the 7th member are edited to be `91234567` and `johndoe@example.com` respectively
+
+
+### Deleting a member : `delete`
+
+Deletes the specified member from the list.
+
+Format: `delete INDEX`
+
+* Deletes the person at the specified `INDEX`.
+* The index refers to the index number shown in the displayed person list.
+* The index **must be a positive integer** 1, 2, 3, …
+
+Example:
+* `list` followed by `delete 2`
+  1. `list`
+  ![list](images/screenshots/delete_1.png)
+  2. `delete 2`
+  ![deleted member](images/screenshots/delete_2.png)
+  The 2nd member is deleted from the list
+
+
+## Search & Filter
 
 ### Locating members by keyword: `find`
 
@@ -186,11 +216,11 @@ Format: `find QUERY`
   e.g. `find john doe` will only return members whose field contains `"john doe"`, not members with just `john` or just `doe`
 
 Examples:
-* `find John` returns members with `John` in any field
-* `find john doe` returns members whose name (or other field) contains `"john doe"`<br>
-  ![result for 'find john doe'](images/findResult.png)
-* `find 9123` returns members whose phone number or other field contains `9123`
-* `find annual` returns members with `annual` membership type
+* `find john doe`
+![result for 'find john doe'](images/screenshots/find_1.png)
+Members whose name (or other field) contains `john doe` are listed
+* `find 9123` returns members whose phone number or another field contains `9123`
+
 
 ### Filtering members by fields: `filter`
 
@@ -198,62 +228,13 @@ Filters member list and displays members who have fields matching the given attr
 
 Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`
 
-Examples:
-* `filter s/valid` returns list of members with valid memberships
-  ![result for 'filter s/valid'](images/filterResult.png)
+Example:
+* `filter s/valid`
+![result for 'filter s/valid'](images/screenshots/filter_1.png)
+Members with valid memberships are listed
 
-### Deleting a member : `delete`
 
-Deletes the specified member from the list.
-
-Format: `delete INDEX`
-
-* Deletes the person at the specified `INDEX`.
-* The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
-
-Examples:
-* `list` followed by `delete 2` deletes the 2nd person in the address book.
-  1. `list`
-  
-     ![list](images/list_2.png)
-  
-  2. `delete 2`
-  
-  ![deleted member](images/delete_2.png)
-  
-* `find Alex` followed by `delete 1` deletes the 1st person in the results of the `find` command.
-
-### Renewing a membership: `renew`
-
-Renews specified member's membership.
-
-Format: `renew INDEX [m/MEMBERSHIP_TYPE]`
-
-* Renews the member's membership at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
-* `MEMBERSHIP_TYPE` is an optional field.
-* The new expiry extends from the **current** expiry date: **annual** adds one year, **monthly** adds one month (from that date, not from today).
-* If the membership has **already expired** (expiry date before today), `renew` is rejected; register the person again with `add`.
-* Membership type will be updated if included in the command.
-
-Examples:
-* `renew 2` renews membership of the 2nd member in the list to `11-04-2026`
-* `renew 1 m/monthly` renews membership and updates membership type of the 1st member in the list to `11-04-2027` and `Monthly` respectively.
-
-### Adding a remark to a member : `remark`
-
-Adds or edits a remark for the specified member.
-
-Format: `remark INDEX r/[REMARK]`
-
-* Edits the remark of the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
-* Existing remark will be overwritten by the input.
-* Providing an empty remark (i.e. `r/` with nothing after it) removes the remark from the member.
-
-Examples:
-* `remark 1 r/Likes to swim.` adds the remark `Likes to swim.` to the 1st member.
-  ![remark added](images/remark.png)
-* `remark 2 r/` removes the remark from the 2nd member.
+## Member Management
 
 ### Viewing the details of a person : `details`
 
@@ -263,28 +244,76 @@ Format: `details INDEX`
 
 * Shows the details of the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
-* The index **must be a positive integer** 1, 2, 3, …​
+* The index **must be a positive integer** 1, 2, 3, …
 
 Examples:
-* `list` followed by `details 1` shows the details of the 1st member in the address book.
+* `list` followed by `details 1`
   1. `list`
-    
-        ![list of members](images/details_list1.png)
-  
+  ![list](images/screenshots/details_1.png)
   2. `details 1`
-  
-        ![details of 1st member](images/details_1.png)
+  ![details in list](images/screenshots/details_2.png)
+  The 1st member's details are shown in the list
+* `find David` followed by `details 1`
+![details in find result](images/screenshots/details_3.png)
+The 1st member's details are shown in the `find` command result.
 
-* `find David` followed by `details 1` shows the details of the 1st member in the results of the `find` command.
 
-  ![details of 1st member in find results](images/details_2.png)
+### Adding a remark to a member : `remark`
 
+Adds or edits a remark for the specified member.
+
+Format: `remark INDEX r/[REMARK]`
+
+* Edits the remark of the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …
+* Existing remark will be overwritten by the input.
+* Providing an empty remark (i.e. `r/` with nothing after it) removes the remark from the member.
+
+Examples:
+* `remark 1 r/likes swimming`
+  ![remark added](images/screenshots/remark_1.png)
+  Remark `likes swimming` is added to the 1st member.
+
+
+### Renewing a membership: `renew`
+
+Renews specified member's membership.
+
+Format: `renew INDEX [m/MEMBERSHIP_TYPE]`
+
+* Renews the member's membership at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …
+* `MEMBERSHIP_TYPE` is an optional field.
+* The new expiry extends from the **current** expiry date: **annual** adds one year, **monthly** adds one month (from that date, not from today).
+* If the membership has **already expired** (expiry date before today), `renew` is rejected; register the person again with `add`.
+* Membership type will be updated if included in the command.
+
+Examples:
+* `renew 2`
+![before renew](images/screenshots/renew_1.png)
+![after renew](images/screenshots/renew_2.png)
+The 2nd member's expiry date is changed from `11-09-26` to `11-10-2026`
+* `renew 4 m/monthly`
+![before renew monthly](images/screenshots/renew_3.png)
+![after renew monthly](images/screenshots/renew_4.png)
+The 4th member's membership type is changed from `Annual` to `Monthly`, so the expiry date is changed from `21-01-2027` to `21-02-2027`
+* `renew 1`
+![renew failed](images/screenshots/renew_5.png)
+The 1st member is failed to be renewed since its membership has expired
+
+
+## Utility
 
 ### Clearing all entries : `clear`
 
 Clears all entries from the address book.
 
 Format: `clear`
+
+Example:
+* `clear`
+![before clear](images/screenshots/clear_1.png)
+![after clear](images/screenshots/clear_2.png)
+The member list is empty after `clear`
+
 
 ### Undoing the last command : `undo`
 
@@ -293,24 +322,11 @@ Undoes the most recent undoable command (add, edit, delete, clear).
 Format: `undo`
 
 Example:
-* `undo`
+* `delete 4` followed by `undo`
+![before undo](images/screenshots/undo_1.png)
+![after undo](images/screenshots/undo_2.png)
+The deleted member is restored after `undo`
 
-  ![before undo](images/undo_before.png)
-
-  ![after undo](images/undo_after.png)
-
-### Navigating command history
-
-Allows you to quickly re-use previously entered commands using the arrow keys in the command box.
-
-* Press the `Up` arrow key to navigate to the previous command in history.
-* Press the `Down` arrow key to navigate to the next command in history.
-* The cursor will be placed at the end of the text after navigating.
-* Pressing `Down` past the most recent command clears the command box.
-
-![navigating to previous command](images/command_history_down.png)
-
-![navigating to next command](images/command_history_up.png)
 
 ### Exiting the program : `exit`
 
@@ -336,6 +352,61 @@ Furthermore, certain edits can cause FitDesk to behave in unexpected ways (e.g.,
 ### Archiving data files `[coming in v2.0]`
 
 _Details coming soon ..._
+
+--------------------------------------------------------------------------------------------------------------------
+
+## Keyboard Features
+
+### Navigating command history
+
+Allows you to quickly re-use previously entered commands using the arrow keys in the command box.
+
+* Press the `Up` arrow key to navigate to the previous command in history.
+* Press the `Down` arrow key to navigate to the next command in history.
+* The cursor will be placed at the end of the text after navigating.
+* Pressing `Down` past the most recent command clears the command box.
+
+Example:
+* `find alex` followed by `Up` arrow key
+![before command history up](images/screenshots/command_history_1.png)
+![after command history up](images/screenshots/command_history_2.png)
+The previous command `find alex` is shown in the command box
+
+
+### Navigating the member list
+
+Scroll through the member list using the keyboard when the list is focused.
+
+* Press `Up` or `Left` to move to the previous member.
+* Press `Down` or `Right` to move to the next member.
+
+
+### Using the home button
+
+Clicking the **FitDesk** header bar resets the view by running `list`, showing all members and restoring the dashboard panel.
+
+
+### Tab completion
+
+Pressing `Tab` in the command box provides context-sensitive completions to help you enter commands faster. Press `Tab` repeatedly to cycle through available options.
+
+**Command word completion**
+* Type a partial command word and press `Tab` to complete it.
+* e.g. `fi` + `Tab` → `filter`, press `Tab` again → `find`
+
+**Field prefix completion**
+* After entering a command (and index where required), press `Tab` to cycle through available field prefixes.
+* e.g. `filter ` + `Tab` → `filter s/` → `Tab` → `filter g/` → ...
+* For `add`, press `Tab` after typing the member's name to get field prefix suggestions.
+
+**Field value completion**
+* For fields with a fixed set of values (`g/`, `m/`, `s/`), type the first letter of the value and press `Tab` to complete it.
+* e.g. `filter s/v` + `Tab` → `filter s/valid`
+* After completing a value, type a space then press `Tab` to continue with the next field prefix.
+
+**Index completion**
+* For `edit`, `remark`, `renew`, `delete`, and `details`, press `Tab` after the command to cycle through valid member indices.
+* e.g. `delete ` + `Tab` → `delete 1` → `Tab` → `delete 2` → ...
 
 --------------------------------------------------------------------------------------------------------------------
 

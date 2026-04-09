@@ -3,9 +3,13 @@ package seedu.address.ui;
 import java.util.logging.Logger;
 
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import seedu.address.commons.core.LogsCenter;
 import seedu.address.model.person.Person;
@@ -27,6 +31,27 @@ public class PersonListPanel extends UiPart<Region> {
         super(FXML);
         personListView.setItems(personList);
         personListView.setCellFactory(listView -> new PersonListViewCell());
+
+        personListView.setOnKeyPressed(event -> {
+            KeyCode mapped = null;
+            switch (event.getCode()) {
+            case LEFT:
+                mapped = KeyCode.UP;
+                break;
+            case RIGHT:
+                mapped = KeyCode.DOWN;
+                break;
+            default:
+                break;
+            }
+            if (mapped != null) {
+                Event.fireEvent(personListView, new KeyEvent(
+                        KeyEvent.KEY_PRESSED, "", "", mapped,
+                        event.isShiftDown(), event.isControlDown(),
+                        event.isAltDown(), event.isMetaDown()));
+                event.consume();
+            }
+        });
     }
 
     /**
@@ -41,6 +66,15 @@ public class PersonListPanel extends UiPart<Region> {
      * Custom {@code ListCell} that displays the graphics of a {@code Person} using a {@code PersonCard}.
      */
     class PersonListViewCell extends ListCell<Person> {
+        PersonListViewCell() {
+            addEventFilter(MouseEvent.MOUSE_PRESSED, event -> {
+                if (!isEmpty() && isSelected()) {
+                    getListView().getSelectionModel().clearSelection();
+                    event.consume();
+                }
+            });
+        }
+
         @Override
         protected void updateItem(Person person, boolean empty) {
             super.updateItem(person, empty);
