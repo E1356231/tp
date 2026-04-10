@@ -5,6 +5,7 @@ import static seedu.address.logic.parser.CliSyntax.PREFIX_DATEOFBIRTH;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMAIL;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_EMERGENCY_CONTACT;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_GENDER;
+import static seedu.address.logic.parser.CliSyntax.PREFIX_JOIN_DATE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_MEMBERSHIP_TYPE;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_NAME;
 import static seedu.address.logic.parser.CliSyntax.PREFIX_PHONE;
@@ -31,6 +32,7 @@ public class AddCommand extends Command {
             + PREFIX_DATEOFBIRTH + "DATEOFBIRTH "
             + PREFIX_EMAIL + "EMAIL "
             + PREFIX_EMERGENCY_CONTACT + "EMERGENCY_CONTACT "
+            + "[" + PREFIX_JOIN_DATE + "JOIN_DATE] "
             + PREFIX_MEMBERSHIP_TYPE + "MEMBERSHIP_TYPE "
             + "Example: " + COMMAND_WORD + " "
             + PREFIX_NAME + "John Doe "
@@ -39,10 +41,11 @@ public class AddCommand extends Command {
             + PREFIX_DATEOFBIRTH + "02-02-2002 "
             + PREFIX_EMAIL + "johnd@example.com "
             + PREFIX_EMERGENCY_CONTACT + "93110225 "
+            + PREFIX_JOIN_DATE + "01-01-2024 "
             + PREFIX_MEMBERSHIP_TYPE + "monthly";
 
-    public static final String MESSAGE_SUCCESS = "New person added: %1$s";
-    public static final String MESSAGE_DUPLICATE_FIELDS = "%1$s already existed in the address book.";
+    public static final String MESSAGE_SUCCESS = "Added person: %1$s";
+    public static final String MESSAGE_DUPLICATE_FIELDS = Messages.MESSAGE_DUPLICATE_FIELDS;
 
     private final Person toAdd;
     private Person addedPerson;
@@ -69,8 +72,8 @@ public class AddCommand extends Command {
 
         if (isPhoneDuplicate || isEmailDuplicate) {
             GenerateMemberIds.decrementMaxId();
-            throw new CommandException(String.format(MESSAGE_DUPLICATE_FIELDS,
-                    formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate)));
+            throw new CommandException(MESSAGE_DUPLICATE_FIELDS
+                    + formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate));
         }
 
         model.addPerson(toAdd);
@@ -88,11 +91,23 @@ public class AddCommand extends Command {
         requireNonNull(model);
 
         if (addedPerson == null || !model.hasPerson(addedPerson)) {
-            throw new CommandException("Unable to undo add: person not found.");
+            throw new CommandException("Cannot undo add: the added person is no longer in the address book.");
         }
 
         model.deletePerson(addedPerson);
         GenerateMemberIds.decrementMaxId();
+    }
+
+    @Override
+    public void redo(Model model) throws CommandException {
+        requireNonNull(model);
+
+        if (addedPerson == null) {
+            throw new CommandException("Unable to redo add: missing person data.");
+        }
+
+        model.addPerson(addedPerson);
+        GenerateMemberIds.initialize(addedPerson.getId().getId());
     }
 
     @Override

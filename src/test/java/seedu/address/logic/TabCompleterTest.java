@@ -42,27 +42,23 @@ public class TabCompleterTest {
         assertTrue(results.isEmpty());
     }
 
-    // --- add: no completion until first prefix+value entered ---
+    // --- add: prefix completion immediately after command word ---
 
     @Test
-    public void getCompletions_addWithSpaceOnly_noCompletion() {
-        assertTrue(tabCompleter.getCompletions("add ").isEmpty());
+    public void getCompletions_addWithSpace_suggestsAllPrefixes() {
+        List<String> results = tabCompleter.getCompletions("add ");
+        assertEquals(9, results.size());
+        assertTrue(results.contains("add n/"));
+        assertTrue(results.contains("add p/"));
+        assertTrue(results.contains("add g/"));
+        assertTrue(results.contains("add j/"));
     }
 
     @Test
-    public void getCompletions_addAfterName_suggestsAllPrefixes() {
-        List<String> results = tabCompleter.getCompletions("add Alice ");
-        assertEquals(8, results.size());
-        assertTrue(results.contains("add Alice n/"));
-        assertTrue(results.contains("add Alice p/"));
-        assertTrue(results.contains("add Alice g/"));
-    }
-
-    @Test
-    public void getCompletions_addAfterNameAndPrefix_suggestsRemainingPrefixes() {
-        List<String> results = tabCompleter.getCompletions("add Alice n/Alice ");
-        assertNoneMatch(results, "add Alice n/Alice n/");
-        assertTrue(results.contains("add Alice n/Alice p/"));
+    public void getCompletions_addAfterPrefix_suggestsRemainingPrefixes() {
+        List<String> results = tabCompleter.getCompletions("add n/Alice ");
+        assertNoneMatch(results, "add n/Alice n/");
+        assertTrue(results.contains("add n/Alice p/"));
     }
 
     // --- filter: plain prefix completion ---
@@ -129,9 +125,10 @@ public class TabCompleterTest {
     @Test
     public void getCompletions_editAfterIndex_suggestsFieldPrefixes() {
         List<String> results = tabCompleter.getCompletions("edit 1 ");
-        assertEquals(8, results.size());
+        assertEquals(7, results.size());
         assertTrue(results.contains("edit 1 n/"));
         assertTrue(results.contains("edit 1 g/"));
+        assertNoneMatch(results, "edit 1 m/");
     }
 
     @Test

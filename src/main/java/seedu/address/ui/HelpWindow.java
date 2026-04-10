@@ -1,5 +1,6 @@
 package seedu.address.ui;
 
+import java.awt.Desktop;
 import java.util.logging.Logger;
 
 import javafx.fxml.FXML;
@@ -16,7 +17,7 @@ import seedu.address.commons.core.LogsCenter;
 public class HelpWindow extends UiPart<Stage> {
 
     public static final String USERGUIDE_URL = "https://ay2526s2-cs2103t-w08-3.github.io/tp/UserGuide.html";
-    public static final String HELP_MESSAGE = "Refer to the user guide: " + USERGUIDE_URL;
+    public static final String HELP_MESSAGE = "Open the user guide for full command details: " + USERGUIDE_URL;
 
     private static final Logger logger = LogsCenter.getLogger(HelpWindow.class);
     private static final String FXML = "HelpWindow.fxml";
@@ -26,6 +27,7 @@ public class HelpWindow extends UiPart<Stage> {
 
     @FXML
     private Label helpMessage;
+
 
     /**
      * Creates a new HelpWindow.
@@ -63,16 +65,20 @@ public class HelpWindow extends UiPart<Stage> {
      *     </ul>
      */
     public void show() {
-        logger.fine("Showing help page about the application.");
-        getRoot().show();
-        getRoot().centerOnScreen();
-    }
-
-    /**
-     * Returns true if the help window is currently being shown.
-     */
-    public boolean isShowing() {
-        return getRoot().isShowing();
+        try {
+            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                logger.info("Opening user guide in the browser.");
+                Desktop.getDesktop().browse(java.net.URI.create(USERGUIDE_URL));
+            } else {
+                logger.info("Cannot open user guide in the browser. Desktop API is not supported.");
+                getRoot().show();
+                getRoot().centerOnScreen();
+            }
+        } catch (Exception e) {
+            logger.info("Failed to open user guide in the browser. " + e.getMessage());
+            getRoot().show();
+            getRoot().centerOnScreen();
+        }
     }
 
     /**
@@ -80,13 +86,6 @@ public class HelpWindow extends UiPart<Stage> {
      */
     public void hide() {
         getRoot().hide();
-    }
-
-    /**
-     * Focuses on the help window.
-     */
-    public void focus() {
-        getRoot().requestFocus();
     }
 
     /**

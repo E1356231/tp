@@ -70,7 +70,7 @@ public class TabCompleter {
         // add: only completes after at least one prefix+value is already present (handled separately).
         Map<String, List<String>> prefixMap = new HashMap<>();
         prefixMap.put(AddCommand.COMMAND_WORD,
-                Arrays.asList("n/", "p/", "g/", "d/", "e/", "m/", "ec/", "r/"));
+                Arrays.asList("n/", "p/", "g/", "d/", "e/", "m/", "ec/", "j/", "r/"));
         prefixMap.put(FilterCommand.COMMAND_WORD,
                 Arrays.asList("s/", "g/", "m/", "age>/", "age</", "age=/",
                         "j>/", "j</", "j=/", "exp>/", "exp</", "exp=/"));
@@ -79,7 +79,7 @@ public class TabCompleter {
         // Commands where INDEX comes first, then optional field prefixes.
         Map<String, List<String>> indexThenPrefixMap = new HashMap<>();
         indexThenPrefixMap.put(EditCommand.COMMAND_WORD,
-                Arrays.asList("n/", "p/", "g/", "d/", "e/", "m/", "ec/", "r/"));
+                Arrays.asList("n/", "p/", "g/", "d/", "e/", "ec/", "r/"));
         indexThenPrefixMap.put(RemarkCommand.COMMAND_WORD,
                 Arrays.asList("r/"));
         indexThenPrefixMap.put(RenewCommand.COMMAND_WORD,
@@ -180,13 +180,7 @@ public class TabCompleter {
             return matches;
         }
 
-        // 5. add: no completion while the user is still typing the first word (the name).
-        //    Once they type a space after the name, suggest field prefixes.
-        if (AddCommand.COMMAND_WORD.equals(commandWord) && !args.contains(" ")) {
-            return new ArrayList<>();
-        }
-
-        // 6. Prefix completion (add with existing args, filter)
+        // 5. Prefix completion (add, filter)
         List<String> prefixes = COMMAND_PREFIXES.get(commandWord);
         if (prefixes == null || prefixes.isEmpty()) {
             return new ArrayList<>();

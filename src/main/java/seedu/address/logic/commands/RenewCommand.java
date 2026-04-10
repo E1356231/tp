@@ -25,6 +25,7 @@ import seedu.address.model.person.MembershipType;
 import seedu.address.model.person.Name;
 import seedu.address.model.person.Person;
 import seedu.address.model.person.Phone;
+import seedu.address.model.person.Remark;
 
 /**
  * Edits the details of an existing person in the address book.
@@ -39,10 +40,11 @@ public class RenewCommand extends Command {
             + "[" + PREFIX_MEMBERSHIP_TYPE + "MEMBERSHIP_TYPE]\n"
             + "Example: " + COMMAND_WORD + " 1 ";
 
-    public static final String MESSAGE_RENEW_PERSON_SUCCESS = "Renewed Member: %1$s";
+    public static final String MESSAGE_RENEW_PERSON_SUCCESS = "Renewed membership for: %1$s";
 
     public static final String MESSAGE_MEMBERSHIP_EXPIRED =
-            "This membership has already expired. Renewal is not allowed; register as a new member using 'add'.";
+            "This membership has already expired. Renewal is not allowed."
+            + " To re-register, delete this member first using 'delete', then add them again using 'add'.";
 
     private final Index index;
     private final RenewPersonDescriptor renewPersonDescriptor;
@@ -96,14 +98,26 @@ public class RenewCommand extends Command {
         requireNonNull(model);
 
         if (originalPerson == null || renewedPerson == null) {
-            throw new CommandException("Unable to undo renew: missing original data.");
+            throw new CommandException("Cannot undo renew: original data is missing.");
         }
 
         if (!model.hasPerson(renewedPerson)) {
-            throw new CommandException("Unable to undo renew: renewed member not found.");
+            throw new CommandException("Cannot undo renew: the renewed member is no longer in the address book.");
         }
 
         model.setPerson(renewedPerson, originalPerson);
+        model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
+    }
+
+    @Override
+    public void redo(Model model) throws CommandException {
+        requireNonNull(model);
+
+        if (originalPerson == null || renewedPerson == null) {
+            throw new CommandException("Unable to redo renew: missing data.");
+        }
+
+        model.setPerson(originalPerson, renewedPerson);
         model.updateFilteredPersonList(PREDICATE_SHOW_ALL_PERSONS);
     }
 
@@ -123,6 +137,7 @@ public class RenewCommand extends Command {
         EmergencyContact emergencyContact = personToRenew.getEmergencyContact();
         MembershipType updatedType = renewPersonDescriptor.getType().orElse(personToRenew.getMembershipType());
         MembershipJoinDate joinDate = personToRenew.getJoinDate();
+        Remark remark = personToRenew.getRemark();
         // Extend membership from current expiry date (execute() rejects if already expired).
         LocalDate currentExpiry = personToRenew.getExpiryDate().getExpiryDate();
         LocalDate newExpiry;
@@ -134,7 +149,7 @@ public class RenewCommand extends Command {
         MembershipExpiryDate expiryDate = new MembershipExpiryDate(newExpiry);
 
         return new Person(memberId, name, phone, gender, dateOfBirth, email,
-                emergencyContact, updatedType, joinDate, expiryDate);
+                emergencyContact, updatedType, joinDate, expiryDate, remark);
     }
 
     @Override

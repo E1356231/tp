@@ -13,7 +13,12 @@
 
 ## **Acknowledgements**
 
-_{ list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the original source as well }_
+* This project is based on the [AddressBook Level 3 (AB3)](https://github.com/se-edu/addressbook-level3) project created by the [SE-EDU initiative](https://se-education.org/).
+* Architecture design, component structure, and documentation templates are adapted from AB3.
+* [JavaFX 17.0.7](https://openjfx.io/) — UI framework
+* [Jackson Databind 2.7.0](https://github.com/FasterXML/jackson-databind) — JSON serialization/deserialization
+* [Jackson Datatype JSR310 2.7.4](https://github.com/FasterXML/jackson-modules-java8) — Java 8 date/time support for Jackson
+* [JUnit Jupiter 5.4.0](https://junit.org/junit5/) — unit and integration testing
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -158,98 +163,79 @@ Classes used by multiple components are in the `seedu.address.commons` package.
 
 This section describes some noteworthy details on how certain features are implemented.
 
-### \[Proposed\] Undo/redo feature
+### Undo/redo feature
 
-#### Proposed Implementation
+#### Implementation
 
-The proposed undo/redo mechanism is facilitated by `VersionedAddressBook`. It extends `AddressBook` with an undo/redo history, stored internally as an `addressBookStateList` and `currentStatePointer`. Additionally, it implements the following operations:
+The undo/redo mechanism is facilitated by `CommandHistory` (in `logic/commands/CommandHistory.java`) and the `Command` base class. Each undoable command stores the data needed to reverse or reapply itself, and implements `undo(Model)` and `redo(Model)` methods.
 
-* `VersionedAddressBook#commit()` — Saves the current address book state in its history.
-* `VersionedAddressBook#undo()` — Restores the previous address book state from its history.
-* `VersionedAddressBook#redo()` — Restores a previously undone address book state from its history.
+`CommandHistory` maintains two stacks:
+* **Undo stack** — bounded `Deque<Command>` of capacity 20, holding commands that can be undone.
+* **Redo stack** — `Deque<Command>`, holding commands that were undone and can be redone.
 
-These operations are exposed in the `Model` interface as `Model#commitAddressBook()`, `Model#undoAddressBook()` and `Model#redoAddressBook()` respectively.
+The following operations are the key interactions:
+* `CommandHistory#push(command)` — Adds a command to the undo stack and clears the redo stack (a new action invalidates redo history).
+* `CommandHistory#pushToUndo(command)` — Adds a command back to the undo stack without clearing the redo stack (used by `RedoCommand`).
+* `CommandHistory#pushRedo(command)` — Moves a command to the redo stack after it is undone.
+* `CommandHistory#popRedo()` — Retrieves the most recently undone command for redoing.
 
-Given below is an example usage scenario and how the undo/redo mechanism behaves at each step.
+Given below is an example usage scenario:
 
-Step 1. The user launches the application for the first time. The `VersionedAddressBook` will be initialized with the initial address book state, and the `currentStatePointer` pointing to that single address book state.
+Step 1. The user executes `delete 5`. `LogicManager` calls `commandHistory.push(deleteCommand)`, adding it to the undo stack. Redo stack is cleared.
 
-<puml src="diagrams/UndoRedoState0.puml" alt="UndoRedoState0" />
+Step 2. The user executes `undo`. `UndoCommand` calls `deleteCommand.undo(model)` to restore the deleted person, then moves `deleteCommand` from the undo stack to the redo stack via `commandHistory.pushRedo(deleteCommand)`.
 
-Step 2. The user executes `delete 5` command to delete the 5th person in the address book. The `delete` command calls `Model#commitAddressBook()`, causing the modified state of the address book after the `delete 5` command executes to be saved in the `addressBookStateList`, and the `currentStatePointer` is shifted to the newly inserted address book state.
+Step 3. The user executes `redo`. `RedoCommand` calls `commandHistory.popRedo()` to retrieve `deleteCommand`, then calls `deleteCommand.redo(model)` to re-delete the person, and pushes it back to the undo stack via `commandHistory.pushToUndo(deleteCommand)`.
 
-<puml src="diagrams/UndoRedoState1.puml" alt="UndoRedoState1" />
-
-Step 3. The user executes `add n/David …​` to add a new person. The `add` command also calls `Model#commitAddressBook()`, causing another modified address book state to be saved into the `addressBookStateList`.
-
-<puml src="diagrams/UndoRedoState2.puml" alt="UndoRedoState2" />
-
-<box type="info" seamless>
-
-**Note:** If a command fails its execution, it will not call `Model#commitAddressBook()`, so the address book state will not be saved into the `addressBookStateList`.
-
-</box>
-
-Step 4. The user now decides that adding the person was a mistake, and decides to undo that action by executing the `undo` command. The `undo` command will call `Model#undoAddressBook()`, which will shift the `currentStatePointer` once to the left, pointing it to the previous address book state, and restores the address book to that state.
-
-<puml src="diagrams/UndoRedoState3.puml" alt="UndoRedoState3" />
-
+Step 4. The user executes a new undoable command (e.g. `add`). `commandHistory.push(addCommand)` adds it to the undo stack and **clears the redo stack**, as it no longer makes sense to redo the previous delete.
 
 <box type="info" seamless>
 
-**Note:** If the `currentStatePointer` is at index 0, pointing to the initial AddressBook state, then there are no previous AddressBook states to restore. The `undo` command uses `Model#canUndoAddressBook()` to check if this is the case. If so, it will return an error to the user rather
-than attempting to perform the undo.
+**Note:** If the undo stack is empty, `undo` returns an error. If the redo stack is empty, `redo` returns an error.
 
 </box>
 
-The following sequence diagram shows how an undo operation goes through the `Logic` component:
+The following sequence diagram illustrates the interactions within the `Logic` component when `undo` is executed (assuming `delete 1` was the previous command):
 
-<puml src="diagrams/UndoSequenceDiagram-Logic.puml" alt="UndoSequenceDiagram-Logic" />
+<puml src="diagrams/UndoSequenceDiagram.puml" alt="Undo Sequence Diagram" />
 
-<box type="info" seamless>
+The following sequence diagram illustrates the interactions within the `Logic` component when `redo` is executed (after the `undo` above):
 
-**Note:** The lifeline for `UndoCommand` should end at the destroy marker (X) but due to a limitation of PlantUML, the lifeline reaches the end of diagram.
+<puml src="diagrams/RedoSequenceDiagram.puml" alt="Redo Sequence Diagram" />
 
-</box>
+Each undoable command stores the minimal state needed to reverse and reapply itself:
 
-Similarly, how an undo operation goes through the `Model` component is shown below:
-
-<puml src="diagrams/UndoSequenceDiagram-Model.puml" alt="UndoSequenceDiagram-Model" />
-
-The `redo` command does the opposite — it calls `Model#redoAddressBook()`, which shifts the `currentStatePointer` once to the right, pointing to the previously undone state, and restores the address book to that state.
-
-<box type="info" seamless>
-
-**Note:** If the `currentStatePointer` is at index `addressBookStateList.size() - 1`, pointing to the latest address book state, then there are no undone AddressBook states to restore. The `redo` command uses `Model#canRedoAddressBook()` to check if this is the case. If so, it will return an error to the user rather than attempting to perform the redo.
-
-</box>
-
-Step 5. The user then decides to execute the command `list`. Commands that do not modify the address book, such as `list`, will usually not call `Model#commitAddressBook()`, `Model#undoAddressBook()` or `Model#redoAddressBook()`. Thus, the `addressBookStateList` remains unchanged.
-
-<puml src="diagrams/UndoRedoState4.puml" alt="UndoRedoState4" />
-
-Step 6. The user executes `clear`, which calls `Model#commitAddressBook()`. Since the `currentStatePointer` is not pointing at the end of the `addressBookStateList`, all address book states after the `currentStatePointer` will be purged. Reason: It no longer makes sense to redo the `add n/David …​` command. This is the behavior that most modern desktop applications follow.
-
-<puml src="diagrams/UndoRedoState5.puml" alt="UndoRedoState5" />
-
-The following activity diagram summarizes what happens when a user executes a new command:
-
-<puml src="diagrams/CommitActivityDiagram.puml" width="250" />
+| Command | Data stored | `undo()` | `redo()` |
+|---------|-------------|----------|----------|
+| `add` | `addedPerson` | `model.deletePerson(addedPerson)` | `model.addPerson(addedPerson)` |
+| `edit` | `originalPerson`, `editedPerson` | `model.setPerson(editedPerson, originalPerson)` | `model.setPerson(originalPerson, editedPerson)` |
+| `delete` | `deletedPerson`, `previousAddressBook` | `model.setAddressBook(previousAddressBook)` | `model.deletePerson(deletedPerson)` |
+| `clear` | `previousAddressBook` | `model.setAddressBook(previousAddressBook)` | `model.setAddressBook(new AddressBook())` |
+| `renew` | `originalPerson`, `renewedPerson` | `model.setPerson(renewedPerson, originalPerson)` | `model.setPerson(originalPerson, renewedPerson)` |
+| `remark` | `originalPerson`, `editedPerson` | `model.setPerson(editedPerson, originalPerson)` | `model.setPerson(originalPerson, editedPerson)` |
 
 #### Design considerations:
 
 **Aspect: How undo & redo executes:**
 
-* **Alternative 1 (current choice):** Saves the entire address book.
-  * Pros: Easy to implement.
-  * Cons: May have performance issues in terms of memory usage.
+* **Alternative 1:** Saves the entire address book for every command.
+  * Pros: Easy to implement uniformly.
+  * Cons: High memory usage; saving the full state for every command is wasteful.
 
-* **Alternative 2:** Individual command knows how to undo/redo by
-  itself.
-  * Pros: Will use less memory (e.g. for `delete`, just save the person being deleted).
-  * Cons: We must ensure that the implementation of each individual command are correct.
+* **Alternative 2 (current choice):** Each command stores only the data it needs to undo/redo itself.
+  * Pros: Memory-efficient; each command only saves what changed.
+  * Cons: Each command must correctly implement `undo()` and `redo()`.
 
-_{more aspects and alternatives to be added}_
+**Aspect: Granularity of undo history:**
+
+* **Alternative 1 (current choice):** Every state-modifying command is individually undoable.
+  * Pros: Fine-grained control; users can undo exactly one step at a time.
+  * Cons: Requires many undo steps to reverse a sequence of bulk changes.
+
+* **Alternative 2:** Group related commands into a single undoable transaction (e.g. a bulk-import).
+  * Pros: More intuitive for batch operations.
+  * Cons: More complex to implement; requires defining transaction boundaries.
+
 
 ### Tab completion feature
 
@@ -286,10 +272,6 @@ Tab completion is implemented across three classes:
 The following sequence diagram illustrates a `Tab` press when the user has typed `filter `:
 
 <puml src="diagrams/TabCompletionSequenceDiagram.puml" alt="Tab completion sequence diagram" />
-
-### \[Proposed\] Data archiving
-
-_{Explain here how the data archiving feature will be implemented}_
 
 
 --------------------------------------------------------------------------------------------------------------------
@@ -529,7 +511,25 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 
-**Use case: UC09 - Access Command History**
+**Use case: UC09 - Redo a Command**
+
+**MSS**
+
+1. Receptionist has previously undone a command
+2. Receptionist requests to redo the last undone command
+3. FitDesk reapplies the undone change and confirms the redo
+
+    Use case ends.
+
+**Extensions**
+
+* 2a. There is no undone command to redo (either nothing was undone, or a new command was executed after the undo).
+    * 2a1. FitDesk shows an error message indicating nothing to redo.
+
+      Use case ends.
+
+
+**Use case: UC10 - Access Command History**
 
 **MSS**
 
@@ -554,7 +554,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case ends.
 
 
-**Use case: UC10 - Renew a Member's Membership**
+**Use case: UC11 - Renew a Member's Membership**
 
 **MSS**
 
@@ -633,7 +633,11 @@ testers are expected to do more *exploratory* testing.
    1. Re-launch the app by double-clicking the jar file.<br>
        Expected: The most recent window size and location is retained.
 
-1. _{ more test cases …​ }_
+1. Shutting down via the `exit` command
+
+   1. Type `exit` in the command box and press Enter.
+
+      Expected: The application closes. Window size and position are saved and will be restored on next launch.
 
 ### Deleting a person
 
@@ -650,13 +654,36 @@ testers are expected to do more *exploratory* testing.
    1. Other incorrect delete commands to try: `delete`, `delete x`, `...` (where x is larger than the list size)<br>
       Expected: Similar to previous.
 
-1. _{ more test cases …​ }_
+1. Deleting a person after filtering the list
+
+   1. Prerequisites: Use the `filter` command (e.g. `filter s/active`) to show a subset of members. At least one member in the filtered list.
+
+   1. Test case: `delete 1`<br>
+      Expected: First member in the *filtered* list is deleted. The filtered view is refreshed. Details of the deleted member shown in the status message.
+
+   1. Test case: `list` followed by `delete 1`<br>
+      Expected: Deletes the first member in the full unfiltered list.
 
 ### Saving data
 
-1. Dealing with missing/corrupted data files
+1. Dealing with a missing data file
 
-   1. _{explain how to simulate a missing/corrupted file, and the expected behavior}_
+   1. Delete the `data/fitdesk.json` file (or move it elsewhere).
 
-1. _{ more test cases …​ }_
+   1. Launch the application.<br>
+      Expected: FitDesk starts with a fresh set of sample members. A new `data/fitdesk.json` file is created automatically on the next data-modifying command.
+
+1. Dealing with a corrupted data file
+
+   1. Open `data/fitdesk.json` in a text editor and introduce invalid JSON (e.g. delete a closing brace `}` or set a field to an invalid value such as `"gender": "X"`).
+
+   1. Launch the application.<br>
+      Expected: FitDesk starts with an empty member list (no sample data). A warning may be logged. The corrupted file is not overwritten until a data-modifying command is executed.
+
+1. Dealing with missing/incorrect preference file
+
+   1. Delete or corrupt the `preferences.json` file.
+
+   1. Launch the application.<br>
+      Expected: FitDesk starts with default window size and position. A new `preferences.json` is created with default values.
 

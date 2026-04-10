@@ -12,12 +12,20 @@ import seedu.address.model.person.Person;
  */
 public class Messages {
 
-    public static final String MESSAGE_UNKNOWN_COMMAND = "Unknown command";
-    public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format! \n%1$s";
-    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX = "The person index provided is invalid";
-    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d persons listed!";
+    public static final String MESSAGE_UNKNOWN_COMMAND =
+            "Unknown command. Type 'help' to see available commands.";
+    public static final String MESSAGE_INVALID_COMMAND_FORMAT = "Invalid command format.\n%1$s";
+    public static final String MESSAGE_INVALID_PERSON_DISPLAYED_INDEX =
+            "The selected person index is invalid. Use the index shown in the current list.";
+    public static final String MESSAGE_PERSONS_LISTED_OVERVIEW = "%1$d person(s) shown.";
     public static final String MESSAGE_DUPLICATE_FIELDS =
-                "Multiple values specified for the following single-valued field(s): ";
+                "The following field(s) are already used by another person: ";
+    public static final String MESSAGE_DUPLICATE_PREFIX_FIELDS =
+                "Each field may only be specified once. Duplicate field(s): ";
+    public static final String MESSAGE_INVALID_FILTER_RANGE =
+                "Invalid range: the lower bound must be less than the upper bound.";
+    public static final String MESSAGE_CONFLICTING_PREFIXES =
+                "The >, <, and = operators for the same field cannot all be used at once. Conflicting field(s): ";
 
     /**
      * Returns an error message indicating the duplicate prefixes.
@@ -28,7 +36,19 @@ public class Messages {
         Set<String> duplicateFields =
                 Stream.of(duplicatePrefixes).map(Prefix::toString).collect(Collectors.toSet());
 
-        return MESSAGE_DUPLICATE_FIELDS + String.join(" ", duplicateFields);
+        return MESSAGE_DUPLICATE_PREFIX_FIELDS + String.join(" ", duplicateFields);
+    }
+
+    /**
+     * Returns an error message indicating conflicting prefixes within a mutually exclusive group.
+     */
+    public static String getErrorMessageForConflictingPrefixes(Prefix... conflictingPrefixes) {
+        assert conflictingPrefixes.length > 0;
+
+        Set<String> conflictingFields =
+                Stream.of(conflictingPrefixes).map(Prefix::toString).collect(Collectors.toSet());
+
+        return MESSAGE_CONFLICTING_PREFIXES + String.join(" ", conflictingFields);
     }
 
     /**

@@ -2,6 +2,7 @@ package seedu.address.model.person;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_DATEOFBIRTH_BOB;
 import static seedu.address.logic.commands.CommandTestUtil.VALID_EMAIL_BOB;
@@ -54,6 +55,7 @@ public class PersonTest {
         // same values -> returns true
         Person aliceCopy = new PersonBuilder(ALICE).build();
         assertTrue(ALICE.equals(aliceCopy));
+        assertEquals(ALICE.hashCode(), aliceCopy.hashCode());
 
         // same object -> returns true
         assertTrue(ALICE.equals(ALICE));
@@ -95,6 +97,22 @@ public class PersonTest {
         editedAlice = new PersonBuilder(ALICE).withEmergencyContact(VALID_EMERGENCY_CONTACT_BOB).build();
         assertFalse(ALICE.equals(editedAlice));
 
+        // different join date -> returns false
+        editedAlice = new PersonBuilder(ALICE).withJoinDate("02-02-2026").build();
+        assertFalse(ALICE.equals(editedAlice));
+
+        // different expiry date -> returns false
+        editedAlice = new PersonBuilder(ALICE).withExpiryDate("02-02-2027").build();
+        assertFalse(ALICE.equals(editedAlice));
+
+        // different remark -> returns false
+        editedAlice = new PersonBuilder(ALICE).withRemark("Prefers morning classes").build();
+        assertFalse(ALICE.equals(editedAlice));
+    }
+
+    @Test
+    public void constructor_joinDateBeforeDateOfBirth_throwsIllegalArgumentException() {
+        assertThrows(IllegalArgumentException.class, () -> new PersonBuilder(ALICE).withJoinDate("01-01-1989").build());
     }
 
     @Test

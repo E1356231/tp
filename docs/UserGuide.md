@@ -26,7 +26,7 @@ FitDesk is a **desktop app for front-desk receptionists** at small-to-medium pri
 2. **Platform-specific installation guides:**
    - **Mac:** [Installation guide](https://se-education.org/guides/tutorials/javaInstallationMac.html)
    - **Windows:** [Installation guide](https://se-education.org/guides/tutorials/javaInstallationWindows.html)
-   - **Linux:** [Installation guide](https://se-education.org/guides/tutorials/javaInstallationLinux.html)
+   - **Linux:** [Installation guide](https://se-education.org/guides/tutorials/javaInstallationLinux.html) <br>
 
 1. **Download the latest `.jar` file** from [here](https://github.com/AY2526S2-CS2103T-W08-3/tp/releases).
 
@@ -38,6 +38,7 @@ FitDesk is a **desktop app for front-desk receptionists** at small-to-medium pri
    1. Open a **command terminal**:
       - **Windows**: Press `Windows key + R`, type `cmd`, and press Enter
       - **Mac/Linux**: Open the **Terminal** app
+   
    2. Navigate to the folder where the `.jar` file was saved
       ```bash
       cd path/to/your/folder
@@ -61,11 +62,12 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
     ```bash
        help
     ```
-   This opens the help window.
+   This will open the user guide in the default browser, if your does not support it a help window will open.
    > 💡 **Tip:** 
    > 
     >- Use the **Up** and **Down** arrow keys to cycle through previously entered commands.
     >- Press **Tab** in the command box to auto-complete command words, field prefixes, and values.
+    >- To navigate back to the overview from a member's details, click on the member in the list.
 ---
 **Try these example commands:**
 
@@ -85,7 +87,7 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
 
 **Learn More**
 
-Refer to the [**Features**](#features) section below for full details of each command.
+Refer to the [**Commands**](#features) section below for full details of each command.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -103,13 +105,13 @@ FitDesk supports the following commands. Click on a command to learn more.
   e.g. in `add n/NAME`, `NAME` is a parameter which can be used as `add n/John Doe`.
 
 * Items in square brackets are optional.<br>
-  e.g `n/NAME [t/TAG]` can be used as `n/John Doe t/friend` or as `n/John Doe`.
-
-* Items with `…`​ after them can be used multiple times including zero times.<br>
-  e.g. `[t/TAG]…​` can be used as ` ` (i.e. 0 times), `t/friend`, `t/friend t/family` etc.
+  e.g. `add n/NAME p/PHONE_NUMBER ... [j/JOIN_DATE]` can be used with or without the join date.
 
 * Parameters can be in any order.<br>
   e.g. if the command specifies `n/NAME p/PHONE_NUMBER`, `p/PHONE_NUMBER n/NAME` is also acceptable.
+
+* Each field prefix may only be specified once per command. Specifying the same prefix more than once will result in an error.<br>
+  e.g. `add n/John n/Jane ...` is invalid.
 
 * Extraneous parameters for commands that do not take in parameters (such as `help`, `list`, `exit` and `clear`) will be ignored.<br>
   e.g. if the command specifies `help 123`, it will be interpreted as `help`.
@@ -128,15 +130,17 @@ Format: `help`
 
 Example:
 * `help`
-![help message](images/screenshots/help_1.png)
-Help message is shown 
+
+    ![help message](images/screenshots/help_1.png)
+
+    Help message is shown 
 
 
 ### Adding a member: `add`
 
 Adds a member to the member list.
 
-Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT`
+Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT [j/JOIN_DATE]`
 
 <box type="tip" seamless>
 
@@ -145,12 +149,15 @@ Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/
 
 * Each **phone number** and **email** must be unique in the member list (no two members may share the same phone or the same email).
 * **Names** do not need to be unique; different members are allowed to have the same name as long as their phone and email differ.
+* If `j/JOIN_DATE` is omitted, the member's join date defaults to the current date.
 * If you try to add someone whose phone or email matches an existing member, the command is rejected and the error message indicates which field is duplicated.
 
 Example:
 * `add n/John Doe p/98765432 g/M d/19-01-2004 m/annual e/johnd@example.com ec/98723347`
-![added member](images/screenshots/add_1.png)
-A new member `John Doe` is added to the member list
+
+    ![added member](images/screenshots/add_1.png)
+
+    A new member `John Doe` is added to the member list
 
 
 ### Listing all members : `list`
@@ -161,15 +168,17 @@ Format: `list`
 
 Example:
 * `list`
-![members listed](images/screenshots/list_1.png)
-All members are listed
+
+    ![members listed](images/screenshots/list_1.png)
+
+    All members are listed
 
 
 ### Editing a person : `edit`
 
 Edits an existing member in the list.
 
-Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [ec/EMERGENCY_CONTACT]`
+Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [e/EMAIL] [ec/EMERGENCY_CONTACT]`
 
 * Edits the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -178,8 +187,10 @@ Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/ME
 
 Example:
 *  `edit 7 p/91234567 e/johndoe@example.com`
-![result for 'edit 1 p/91234567 e/johndoe@example.com'](images/screenshots/edit_1.png)
-The phone number and email address of the 7th member are edited to be `91234567` and `johndoe@example.com` respectively
+
+    ![result for 'edit 1 p/91234567 e/johndoe@example.com'](images/screenshots/edit_1.png)
+    
+    The phone number and email address of the 7th member are edited to be `91234567` and `johndoe@example.com` respectively
 
 
 ### Deleting a member : `delete`
@@ -195,10 +206,14 @@ Format: `delete INDEX`
 Example:
 * `list` followed by `delete 2`
   1. `list`
-  ![list](images/screenshots/delete_1.png)
+  
+        ![list](images/screenshots/delete_1.png)
+  
   2. `delete 2`
-  ![deleted member](images/screenshots/delete_2.png)
-  The 2nd member is deleted from the list
+  
+        ![deleted member](images/screenshots/delete_2.png)
+  
+        The 2nd member is deleted from the list
 
 
 ## Search & Filter
@@ -217,8 +232,11 @@ Format: `find QUERY`
 
 Examples:
 * `find john doe`
-![result for 'find john doe'](images/screenshots/find_1.png)
-Members whose name (or other field) contains `john doe` are listed
+
+    ![result for 'find john doe'](images/screenshots/find_1.png)
+
+    Members whose name (or other field) contains `john doe` are listed
+
 * `find 9123` returns members whose phone number or another field contains `9123`
 
 
@@ -228,10 +246,19 @@ Filters member list and displays members who have fields matching the given attr
 
 Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`
 
+* Each prefix may only be specified once. Specifying the same prefix more than once is an error.
+* For each date/age field, operators may be combined as follows:
+  * `>/` + `</` — range, e.g. `age>/20 age</30` finds members aged strictly between 20 and 30
+  * `>/` + `=/` (same value) — greater than or equal, e.g. `age>/20 age=/20` finds members aged 20 or older
+  * `</` + `=/` (same value) — less than or equal, e.g. `age</30 age=/30` finds members aged 30 or younger
+  * All three operators together are not allowed.
+
 Example:
 * `filter s/valid`
-![result for 'filter s/valid'](images/screenshots/filter_1.png)
-Members with valid memberships are listed
+
+    ![result for 'filter s/valid'](images/screenshots/filter_1.png)
+
+    Members with valid memberships are listed
 
 
 ## Member Management
@@ -249,13 +276,20 @@ Format: `details INDEX`
 Examples:
 * `list` followed by `details 1`
   1. `list`
-  ![list](images/screenshots/details_1.png)
+  
+        ![list](images/screenshots/details_1.png)
+  
   2. `details 1`
-  ![details in list](images/screenshots/details_2.png)
-  The 1st member's details are shown in the list
+  
+        ![details in list](images/screenshots/details_2.png)
+  
+        The 1st member's details are shown in the list
+  
 * `find David` followed by `details 1`
-![details in find result](images/screenshots/details_3.png)
-The 1st member's details are shown in the `find` command result.
+
+    ![details in find result](images/screenshots/details_3.png)
+
+    The 1st member's details are shown in the `find` command result.
 
 
 ### Adding a remark to a member : `remark`
@@ -267,11 +301,14 @@ Format: `remark INDEX r/[REMARK]`
 * Edits the remark of the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …
 * Existing remark will be overwritten by the input.
 * Providing an empty remark (i.e. `r/` with nothing after it) removes the remark from the member.
+* The `r/` prefix may only be specified once.
 
 Examples:
 * `remark 1 r/likes swimming`
-  ![remark added](images/screenshots/remark_1.png)
-  Remark `likes swimming` is added to the 1st member.
+
+    ![remark added](images/screenshots/remark_1.png)
+
+    Remark `likes swimming` is added to the 1st member.
 
 
 ### Renewing a membership: `renew`
@@ -288,16 +325,26 @@ Format: `renew INDEX [m/MEMBERSHIP_TYPE]`
 
 Examples:
 * `renew 2`
-![before renew](images/screenshots/renew_1.png)
-![after renew](images/screenshots/renew_2.png)
-The 2nd member's expiry date is changed from `11-09-26` to `11-10-2026`
+
+    ![before renew](images/screenshots/renew_1.png)
+
+    ![after renew](images/screenshots/renew_2.png)
+
+    The 2nd member's expiry date is changed from `11-09-2026` to `11-10-2026`
+
 * `renew 4 m/monthly`
-![before renew monthly](images/screenshots/renew_3.png)
-![after renew monthly](images/screenshots/renew_4.png)
-The 4th member's membership type is changed from `Annual` to `Monthly`, so the expiry date is changed from `21-01-2027` to `21-02-2027`
+
+    ![before renew monthly](images/screenshots/renew_3.png)
+
+    ![after renew monthly](images/screenshots/renew_4.png)
+
+    The 4th member's membership type is changed from `Annual` to `Monthly`, so the expiry date is changed from `21-01-2027` to `21-02-2027`
+
 * `renew 1`
-![renew failed](images/screenshots/renew_5.png)
-The 1st member is failed to be renewed since its membership has expired
+
+    ![renew failed](images/screenshots/renew_5.png)
+
+    The 1st member is failed to be renewed since its membership has expired
 
 
 ## Utility
@@ -310,22 +357,46 @@ Format: `clear`
 
 Example:
 * `clear`
-![before clear](images/screenshots/clear_1.png)
-![after clear](images/screenshots/clear_2.png)
-The member list is empty after `clear`
+
+    ![before clear](images/screenshots/clear_1.png)
+
+    ![after clear](images/screenshots/clear_2.png)
+
+    The member list is empty after `clear`
 
 
 ### Undoing the last command : `undo`
 
-Undoes the most recent undoable command (add, edit, delete, clear).
+Undoes the most recent undoable command (add, edit, delete, clear, renew, remark).
 
 Format: `undo`
 
 Example:
 * `delete 4` followed by `undo`
-![before undo](images/screenshots/undo_1.png)
-![after undo](images/screenshots/undo_2.png)
-The deleted member is restored after `undo`
+
+    ![before undo](images/screenshots/undo_1.png)
+
+    ![after undo](images/screenshots/undo_2.png)
+
+    The deleted member is restored after `undo`
+
+
+### Redoing the last undone command : `redo`
+
+Reverses the most recent `undo`, restoring the state before it was undone.
+
+Format: `redo`
+
+<box type="info" seamless>
+
+**Note:**
+* `redo` is only available immediately after `undo`. Executing any new command (e.g. `add`, `edit`) after an `undo` clears the redo history.
+* The redo history can hold up to 20 commands.
+
+</box>
+
+Example:
+* `delete 4` → `undo` → `redo` restores the deletion.
 
 
 ### Exiting the program : `exit`
@@ -340,7 +411,7 @@ FitDesk data are saved in the hard disk automatically after any command that cha
 
 ### Editing the data file
 
-FitDesk data are saved automatically as a JSON file `[JAR file location]/data/addressbook.json`. Advanced users are welcome to update data directly by editing that data file.
+FitDesk data are saved automatically as a JSON file `[JAR file location]/data/fitdesk.json`. Advanced users are welcome to update data directly by editing that data file.
 
 <box type="warning" seamless>
 
@@ -348,10 +419,6 @@ FitDesk data are saved automatically as a JSON file `[JAR file location]/data/ad
 If your changes to the data file makes its format invalid, FitDesk will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause FitDesk to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
-
-### Archiving data files `[coming in v2.0]`
-
-_Details coming soon ..._
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -368,9 +435,12 @@ Allows you to quickly re-use previously entered commands using the arrow keys in
 
 Example:
 * `find alex` followed by `Up` arrow key
-![before command history up](images/screenshots/command_history_1.png)
-![after command history up](images/screenshots/command_history_2.png)
-The previous command `find alex` is shown in the command box
+
+    ![before command history up](images/screenshots/command_history_1.png)
+
+    ![after command history up](images/screenshots/command_history_2.png)
+
+    The previous command `find alex` is shown in the command box
 
 
 ### Navigating the member list
@@ -397,7 +467,6 @@ Pressing `Tab` in the command box provides context-sensitive completions to help
 **Field prefix completion**
 * After entering a command (and index where required), press `Tab` to cycle through available field prefixes.
 * e.g. `filter ` + `Tab` → `filter s/` → `Tab` → `filter g/` → ...
-* For `add`, press `Tab` after typing the member's name to get field prefix suggestions.
 
 **Field value completion**
 * For fields with a fixed set of values (`g/`, `m/`, `s/`), type the first letter of the value and press `Tab` to complete it.
@@ -413,7 +482,7 @@ Pressing `Tab` in the command box provides context-sensitive completions to help
 ## FAQ
 
 **Q**: How do I transfer my data to another Computer?<br>
-**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous AddressBook home folder.
+**A**: Install the app in the other computer and overwrite the empty data file it creates with the file that contains the data of your previous FitDesk home folder.
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -428,10 +497,10 @@ Pressing `Tab` in the command box provides context-sensitive completions to help
 
 Action     | Format, Examples
 -----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-**Add**    | `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT ​` <br> e.g., `add n/James Ho p/82224444 g/M d/14-05-2001 m/annual e/jamesho@example.com ec/99502281`
+**Add**    | `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT  [j/JOIN_DATE] ​` <br> e.g., `add n/James Ho p/82224444 g/M d/14-05-2001 m/annual e/jamesho@example.com ec/99502281`
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
-**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [m/MEMBERSHIP_TYPE] [j/JOIN_DATE] [e/EMAIL] [ec/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee m/monthly e/jameslee@example.com`
+**Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [e/EMAIL] [ec/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
 **Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
 **Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`<br> e.g., `filter s/valid g/M`
 **Remark**  | `remark INDEX r/[REMARK]`<br> e.g., `remark 1 r/Likes to swim.`
@@ -439,4 +508,5 @@ Action     | Format, Examples
 **Details**   | `details INDEX`<br> e.g., `details 1`
 **List**   | `list`
 **Undo**   | `undo`
+**Redo**   | `redo`
 **Help**   | `help`

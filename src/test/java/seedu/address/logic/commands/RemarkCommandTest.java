@@ -91,7 +91,7 @@ public class RemarkCommandTest {
         RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(REMARK_STUB));
 
         assertThrows(CommandException.class,
-                "Unable to undo remark: missing original data.", () -> remarkCommand.undo(model));
+                "Cannot undo remark: original data is missing.", () -> remarkCommand.undo(model));
     }
 
     @Test
@@ -103,8 +103,10 @@ public class RemarkCommandTest {
         Person editedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         model.deletePerson(editedPerson);
 
-        assertThrows(CommandException.class,
-                "Unable to undo remark: edited person not found.", () -> remarkCommand.undo(model));
+        String expectedMessage = "Cannot undo remark: the updated person is no longer in the address book.";
+        assertThrows(
+                CommandException.class,
+                expectedMessage, () -> remarkCommand.undo(model));
     }
 
     @Test
@@ -119,7 +121,7 @@ public class RemarkCommandTest {
         editedPersonField.set(remarkCommand, null);
 
         assertThrows(CommandException.class,
-                "Unable to undo remark: missing original data.", () -> remarkCommand.undo(model));
+                "Cannot undo remark: original data is missing.", () -> remarkCommand.undo(model));
     }
 
     @Test
@@ -144,6 +146,34 @@ public class RemarkCommandTest {
 
         // different remark -> returns false
         assertFalse(standardCommand.equals(new RemarkCommand(INDEX_FIRST_PERSON, new Remark("other remark"))));
+    }
+
+    @Test
+    public void redo_afterExecute_reremarksCorrectPerson() throws Exception {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(REMARK_STUB));
+
+        remarkCommand.execute(expectedModel);
+        remarkCommand.execute(model);
+
+        // Undo restores original
+        remarkCommand.undo(model);
+
+        // Redo re-applies the remark
+        remarkCommand.redo(model);
+        assertEquals(expectedModel, model);
+    }
+
+    @Test
+    public void redo_withoutExecute_throwsCommandException() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        RemarkCommand remarkCommand = new RemarkCommand(INDEX_FIRST_PERSON, new Remark(REMARK_STUB));
+
+        assertThrows(CommandException.class,
+                "Unable to redo remark: missing data.", () ->
+                        remarkCommand.redo(model));
     }
 
     @Test

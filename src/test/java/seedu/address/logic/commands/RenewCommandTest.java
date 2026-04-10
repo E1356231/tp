@@ -139,7 +139,7 @@ public class RenewCommandTest {
         RenewCommand renewCommand = new RenewCommand(INDEX_FIRST_PERSON, descriptor);
 
         assertThrows(CommandException.class,
-                "Unable to undo renew: missing original data.", () -> renewCommand.undo(model));
+                "Cannot undo renew: original data is missing.", () -> renewCommand.undo(model));
     }
 
     @Test
@@ -152,8 +152,10 @@ public class RenewCommandTest {
         Person renewedPerson = model.getFilteredPersonList().get(INDEX_FIRST_PERSON.getZeroBased());
         model.deletePerson(renewedPerson);
 
-        assertThrows(CommandException.class,
-                "Unable to undo renew: renewed member not found.", () -> renewCommand.undo(model));
+        String expectedMessage = "Cannot undo renew: the renewed member is no longer in the address book.";
+        assertThrows(
+                CommandException.class,
+                expectedMessage, () -> renewCommand.undo(model));
     }
 
     @Test
@@ -169,7 +171,7 @@ public class RenewCommandTest {
         editedPersonField.set(renewCommand, null);
 
         assertThrows(CommandException.class,
-                "Unable to undo renew: missing original data.", () -> renewCommand.undo(model));
+                "Cannot undo renew: original data is missing.", () -> renewCommand.undo(model));
     }
 
     @Test
@@ -205,6 +207,36 @@ public class RenewCommandTest {
         String expected = RenewCommand.class.getCanonicalName() + "{index=" + index + ", renewPersonDescriptor="
                 + renewPersonDescriptor + "}";
         assertEquals(expected, renewCommand.toString());
+    }
+
+    @Test
+    public void redo_afterExecute_renenewsCorrectPerson() throws Exception {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        Model expectedModel = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+
+        RenewPersonDescriptor descriptor = new RenewPersonDescriptorBuilder().withType(VALID_TYPE_BOB).build();
+        RenewCommand renewCommand = new RenewCommand(INDEX_FIRST_PERSON, descriptor);
+
+        renewCommand.execute(expectedModel);
+        renewCommand.execute(model);
+
+        // Undo restores original
+        renewCommand.undo(model);
+
+        // Redo re-applies the renew
+        renewCommand.redo(model);
+        assertEquals(expectedModel, model);
+    }
+
+    @Test
+    public void redo_withoutExecute_throwsCommandException() {
+        Model model = new ModelManager(getTypicalAddressBook(), new UserPrefs());
+        RenewPersonDescriptor descriptor = new RenewPersonDescriptorBuilder().withType(VALID_TYPE_BOB).build();
+        RenewCommand renewCommand = new RenewCommand(INDEX_FIRST_PERSON, descriptor);
+
+        assertThrows(CommandException.class,
+                "Unable to redo renew: missing data.", () ->
+                        renewCommand.redo(model));
     }
 
 }
