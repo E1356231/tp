@@ -40,6 +40,16 @@ public class Person {
         this(id, name, phone, gender, dateOfBirth, email, emergencyContact, type, joinDate, expiryDate,
                 new Remark(""));
     }
+    /**
+     * creates a Person without ID
+     */
+    public Person(Name name, Phone phone, Gender gender,
+                  DateOfBirth dateOfBirth, Email email, EmergencyContact emergencyContact,
+                  MembershipType type, MembershipJoinDate joinDate, MembershipExpiryDate expiryDate) {
+
+        this(null, name, phone, gender, dateOfBirth, email,
+                emergencyContact, type, joinDate, expiryDate, new Remark(""));
+    }
 
     /**
      * Every field must be present and not null.
@@ -47,7 +57,7 @@ public class Person {
     public Person(MemberId id, Name name, Phone phone, Gender gender,
                   DateOfBirth dateOfBirth, Email email, EmergencyContact emergencyContact,
                   MembershipType type, MembershipJoinDate joinDate, MembershipExpiryDate expiryDate, Remark remark) {
-        requireAllNonNull(id, name, phone, gender, dateOfBirth, email, emergencyContact, type, joinDate, expiryDate,
+        requireAllNonNull(name, phone, gender, dateOfBirth, email, emergencyContact, type, joinDate, expiryDate,
                 remark);
         checkArgument(!joinDate.getDate().isBefore(dateOfBirth.getDate()), MESSAGE_CONSTRAINTS);
         this.id = id;

@@ -15,6 +15,7 @@ import seedu.address.logic.Messages;
 import seedu.address.logic.commands.exceptions.CommandException;
 import seedu.address.model.GenerateMemberIds;
 import seedu.address.model.Model;
+import seedu.address.model.person.MemberId;
 import seedu.address.model.person.Person;
 
 /**
@@ -76,9 +77,23 @@ public class AddCommand extends Command {
                     + formatDuplicateFields(isPhoneDuplicate, isEmailDuplicate));
         }
 
-        model.addPerson(toAdd);
-        addedPerson = toAdd;
-        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(toAdd)));
+        MemberId memberId = GenerateMemberIds.generateNextId();
+        Person personWithId = new Person(
+                memberId,
+                toAdd.getName(),
+                toAdd.getPhone(),
+                toAdd.getGender(),
+                toAdd.getDateOfBirth(),
+                toAdd.getEmail(),
+                toAdd.getEmergencyContact(),
+                toAdd.getMembershipType(),
+                toAdd.getJoinDate(),
+                toAdd.getExpiryDate()
+        );
+        model.addPerson(personWithId);
+        addedPerson = personWithId;
+
+        return new CommandResult(String.format(MESSAGE_SUCCESS, Messages.format(personWithId)));
     }
 
     @Override
