@@ -609,7 +609,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Mainstream OS**: Windows, Linux, Unix, macOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
 * **Member**: A registered gym patron whose details are stored and managed in FitDesk
 * **Membership status**: The current standing of a member's membership, which can be one of the following — active, expired, or suspended
