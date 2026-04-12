@@ -224,7 +224,7 @@ Finds members whose fields contain the search query as a substring.
 Format: `find QUERY`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
-* Only some text-based fields are searched: name, phone, email, emergency contact, membership type.
+* Only some text-based fields are searched: name, phone, email, emergency contact, membership type, member ID, and remark.
 * Can take any input as the query, including special characters and spaces.
 * The entire query is matched as a literal substring against each field.
   e.g. `find john doe` will only return members whose field contains `"john doe"`, not members with just `john` or just `doe`
