@@ -7,11 +7,11 @@
       "headings": {
         "about-us": "About Us",
         "project-team": "Project team",
-        "john-doe": "John Doe",
-        "jane-doe": "Jane Doe",
-        "johnny-doe": "Johnny Doe",
-        "jean-doe": "Jean Doe",
-        "james-doe": "James Doe"
+        "raghad-altelmessani": "Raghad Altelmessani",
+        "fathan-mubina": "Fathan Mubina",
+        "yifei": "Yifei",
+        "rachel-ng": "Rachel Ng",
+        "shu-xian": "Shu Xian"
       },
       "headingKeywords": {}
     },
@@ -40,7 +40,7 @@
       "src": "DeveloperGuide.md",
       "title": "Developer Guide",
       "headings": {
-        "ab-3-developer-guide": "AB-3 Developer Guide",
+        "fitdesk-developer-guide": "FitDesk Developer Guide",
         "acknowledgements": "Acknowledgements",
         "setting-up-getting-started": "Setting up, getting started",
         "design": "Design",
@@ -51,8 +51,8 @@
         "storage-component": "Storage component",
         "common-classes": "Common classes",
         "implementation": "Implementation",
-        "proposed-undo-redo-feature": "[Proposed] Undo/redo feature",
-        "proposed-data-archiving": "[Proposed] Data archiving",
+        "undo-redo-feature": "Undo/redo feature",
+        "tab-completion-feature": "Tab completion feature",
         "documentation-logging-testing-configuration-dev-ops": "Documentation, logging, testing, configuration, dev-ops",
         "appendix-requirements": "Appendix: Requirements",
         "product-scope": "Product scope",
@@ -107,23 +107,43 @@
       "src": "UserGuide.md",
       "title": "User Guide",
       "headings": {
-        "ab-3-user-guide": "AB-3 User Guide",
-        "quick-start": "Quick start",
-        "features": "Features",
-        "viewing-help-help": "Viewing help : help",
-        "adding-a-person-add": "Adding a person: add",
-        "listing-all-persons-list": "Listing all persons : list",
-        "editing-a-person-edit": "Editing a person : edit",
-        "locating-persons-by-name-find": "Locating persons by name: find",
-        "deleting-a-person-delete": "Deleting a person : delete",
+        "fitdesk-user-guide": "FitDesk User Guide",
+        "app-overview": "App Overview",
+        "supported-operating-systems": "Supported Operating Systems",
+        "quick-start": "Quick Start",
+        "setup-instructions": "Setup Instructions",
+        "using-the-application": "Using the Application",
+        "commands": "Commands",
+        "basic-commands": "Basic Commands",
+        "viewing-help-help": "Viewing help: help",
+        "adding-a-member-add": "Adding a member: add",
+        "listing-all-members-list": "Listing all members : list",
+        "editing-a-member-edit": "Editing a member: edit",
+        "deleting-a-member-delete": "Deleting a member : delete",
+        "search-and-amp-filter": "Search &amp; Filter",
+        "locating-members-by-keyword-find": "Locating members by keyword: find",
+        "filtering-members-by-fields-filter": "Filtering members by fields: filter",
+        "member-management": "Member Management",
+        "viewing-the-details-of-a-person-details": "Viewing the details of a person : details",
+        "adding-a-remark-to-a-member-remark": "Adding a remark to a member : remark",
+        "renewing-a-membership-renew": "Renewing a membership: renew",
+        "utility": "Utility",
         "clearing-all-entries-clear": "Clearing all entries : clear",
+        "undoing-the-last-command-undo": "Undoing the last command : undo",
+        "redoing-the-last-undone-command-redo": "Redoing the last undone command : redo",
         "exiting-the-program-exit": "Exiting the program : exit",
         "saving-the-data": "Saving the data",
         "editing-the-data-file": "Editing the data file",
-        "archiving-data-files-coming-in-v2-0": "Archiving data files [coming in v2.0]",
+        "keyboard-features": "Keyboard Features",
+        "navigating-command-history": "Navigating command history",
+        "navigating-the-member-list": "Navigating the member list",
+        "using-the-home-button": "Using the home button",
+        "tab-completion": "Tab completion",
         "faq": "FAQ",
         "known-issues": "Known issues",
-        "command-summary": "Command summary"
+        "planned-enhancements": "Planned Enhancements",
+        "command-summary": "Command summary",
+        "parameter-constraints": "Parameter constraints"
       },
       "headingKeywords": {}
     },
@@ -131,15 +151,23 @@
       "src": "index.md",
       "title": "",
       "headings": {
-        "addressbook-level-3": "AddressBook Level-3"
+        "fitdesk": "FitDesk"
       },
       "headingKeywords": {}
     },
     {
-      "src": "team/johndoe.md",
+      "src": "team/e1356231.md",
       "title": "John Doe's Project Portfolio Page",
       "headings": {
         "project-addressbook-level-3": "Project: AddressBook Level 3"
+      },
+      "headingKeywords": {}
+    },
+    {
+      "src": "team/phfabs.md",
+      "title": "Yifei's Project Portfolio Page",
+      "headings": {
+        "yifei": "Yifei"
       },
       "headingKeywords": {}
     }
