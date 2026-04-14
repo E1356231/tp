@@ -2,6 +2,8 @@ package seedu.address.storage;
 
 
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -93,6 +95,9 @@ class JsonAdaptedPerson {
     public Person toModelType() throws IllegalValueException {
         final MemberId modelId;
         if (id != null) {
+            if (!isValidMemberId(id)) {
+                throw new IllegalValueException("MemberId should be in the format M###.");
+            }
             int idNumber = Integer.parseInt(id.substring(1));
             modelId = new MemberId(idNumber);
         } else {
@@ -119,7 +124,7 @@ class JsonAdaptedPerson {
             throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Gender.class.getSimpleName()));
         }
         if (!Gender.isValidGender(gender)) {
-            throw new IllegalValueException(Name.MESSAGE_CONSTRAINTS);
+            throw new IllegalValueException(Gender.MESSAGE_CONSTRAINTS);
         }
         final Gender modelGender = new Gender(gender);
 
@@ -160,18 +165,37 @@ class JsonAdaptedPerson {
 
         final MembershipJoinDate modelJoinDate;
         if (joinDate != null) {
+            if (!MembershipJoinDate.isValidJoinDate(joinDate)) {
+                throw new IllegalValueException(MembershipJoinDate.MESSAGE_CONSTRAINTS);
+            }
             modelJoinDate = new MembershipJoinDate(joinDate);
         } else {
             modelJoinDate = new MembershipJoinDate();
         }
 
-        final MembershipExpiryDate modelExpiryDate;
-        if (expiryDate != null) {
-            modelExpiryDate = new MembershipExpiryDate(expiryDate);
-        } else {
-            modelExpiryDate = new MembershipExpiryDate(modelJoinDate.getDate(), modelType);
+        if (expiryDate == null || expiryDate.trim().isEmpty()) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT,
+                    MembershipExpiryDate.class.getSimpleName()));
         }
-        final Remark modelRemark = new Remark(remark != null ? remark : "");
+
+        final MembershipExpiryDate modelExpiryDate;
+        MembershipExpiryDate derivedExpiry = new MembershipExpiryDate(modelJoinDate.getDate(), modelType);
+        String trimmedExpiry = expiryDate.trim();
+        if (!MembershipExpiryDate.isValidExpiryDate(trimmedExpiry)) {
+            throw new IllegalValueException(MembershipExpiryDate.MESSAGE_CONSTRAINTS);
+        }
+        MembershipExpiryDate parsedStored = new MembershipExpiryDate(trimmedExpiry);
+        LocalDate anchor = derivedExpiry.getExpiryDate();
+        LocalDate storedDate = parsedStored.getExpiryDate();
+        if (isRenewalExtensionOf(anchor, storedDate, modelType)) {
+            modelExpiryDate = parsedStored;
+        } else {
+            modelExpiryDate = derivedExpiry;
+        }
+        if (remark == null) {
+            throw new IllegalValueException(String.format(MISSING_FIELD_MESSAGE_FORMAT, Remark.class.getSimpleName()));
+        }
+        final Remark modelRemark = new Remark(remark);
 
         try {
             return new Person(modelId, modelName, modelPhone, modelGender, modelDateOfBirth,
@@ -179,6 +203,38 @@ class JsonAdaptedPerson {
         } catch (IllegalArgumentException e) {
             throw new IllegalValueException(e.getMessage(), e);
         }
+    }
+
+    /**
+     * True if {@code stored} is {@code anchor} or a date reached by repeatedly extending
+     * the membership by one period (matching the renew command), for the given type.
+     */
+    private static boolean isRenewalExtensionOf(LocalDate anchor, LocalDate stored, MembershipType type) {
+        if (stored.isBefore(anchor)) {
+            return false;
+        }
+        LocalDate cursor = anchor;
+        for (int i = 0; i < 1000; i++) {
+            if (cursor.equals(stored)) {
+                return true;
+            }
+            if (cursor.isAfter(stored)) {
+                return false;
+            }
+            cursor = stepRenewal(cursor, type);
+        }
+        return false;
+    }
+
+    private static LocalDate stepRenewal(LocalDate currentExpiry, MembershipType type) {
+        if (type.toString().equalsIgnoreCase("annual")) {
+            return currentExpiry.plusYears(1);
+        }
+        return currentExpiry.plusMonths(1);
+    }
+
+    private static boolean isValidMemberId(String test) {
+        return test.matches("M\\d{3}");
     }
 
 }

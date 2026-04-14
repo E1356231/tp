@@ -16,6 +16,8 @@ FitDesk is a **desktop app for front-desk receptionists** at small-to-medium pri
 <!-- * Table of Contents -->
 <page-nav-print />
 
+<div style="page-break-after: always;"></div>
+
 --------------------------------------------------------------------------------------------------------------------
 
 ## Quick Start
@@ -51,6 +53,8 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
 
 ![Ui](images/Ui.png)
 
+<div style="page-break-after: always;"></div>
+
 --------------------------------------------------------------------------------------------------------------------
 
 ### Using the Application
@@ -62,7 +66,10 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
     ```bash
        help
     ```
-   This will open the user guide in the default browser, if your does not support it a help window will open.
+   This will open the user guide in the default browser, if your OS does not support it a help window will open. 
+   Alternatively, you can copy the URL from the command box and open it in your browser.
+   * Note: For some Linux distributions, the app may freeze when entering an invalid command e.g. `help 123`. 
+
    > 💡 **Tip:** 
    > 
     >- Use the **Up** and **Down** arrow keys to cycle through previously entered commands.
@@ -88,6 +95,10 @@ A GUI similar to the below should appear in a few seconds. Note how the app cont
 **Learn More**
 
 Refer to the [**Commands**](#features) section below for full details of each command.
+
+Refer to the [**Parameter constraints**](#parameter-constraints) section for the rules on valid parameter values.
+
+<div style="page-break-after: always;"></div>
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -122,9 +133,10 @@ FitDesk supports the following commands. Click on a command to learn more.
 
 ## Basic Commands
 
-### Viewing help : `help`
+### Viewing help: `help`
 
-Shows a message explaining how to access the help page through a pop-up window.
+Opens the user guide in the default browser. If the OS does not support opening the browser, a help window will open to copy the URL.
+Alternatively the user can copy the URL from the command box.
 
 Format: `help`
 
@@ -140,7 +152,7 @@ Example:
 
 Adds a member to the member list.
 
-Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT [j/JOIN_DATE]`
+Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/EMAIL ec/EMERGENCY_CONTACT [j/JOIN_DATE] [r/REMARK]`
 
 <box type="tip" seamless>
 
@@ -150,6 +162,7 @@ Format: `add n/NAME p/PHONE_NUMBER g/GENDER d/DATE_OF_BIRTH m/MEMBERSHIP_TYPE e/
 * Each **phone number** and **email** must be unique in the member list (no two members may share the same phone or the same email).
 * **Names** do not need to be unique; different members are allowed to have the same name as long as their phone and email differ.
 * If `j/JOIN_DATE` is omitted, the member's join date defaults to the current date.
+* If `r/REMARK` is omitted, the remark defaults to empty.
 * If you try to add someone whose phone or email matches an existing member, the command is rejected and the error message indicates which field is duplicated.
 
 Example:
@@ -166,6 +179,9 @@ Shows a list of all members in the list.
 
 Format: `list`
 
+* Membership status is derived from the member's join date, expiry date, and the current system date when the list is rendered.
+* Running `list` refreshes the displayed statuses for all members in the list.
+
 Example:
 * `list`
 
@@ -174,11 +190,11 @@ Example:
     All members are listed
 
 
-### Editing a person : `edit`
+### Editing a member: `edit`
 
 Edits an existing member in the list.
 
-Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [e/EMAIL] [ec/EMERGENCY_CONTACT]`
+Format: `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [e/EMAIL] [ec/EMERGENCY_CONTACT] [r/REMARK]`
 
 * Edits the member at the specified `INDEX`. The index refers to the index number shown in the displayed member list. The index **must be a positive integer** 1, 2, 3, …​
 * At least one of the optional fields must be provided.
@@ -225,7 +241,7 @@ Finds members whose fields contain the search query as a substring.
 Format: `find QUERY`
 
 * The search is case-insensitive. e.g `hans` will match `Hans`
-* Only some text-based fields are searched: name, phone, email, emergency contact, membership type.
+* Only some text-based fields are searched: name, phone, email, emergency contact, membership type, member ID, and remark.
 * Can take any input as the query, including special characters and spaces.
 * The entire query is matched as a literal substring against each field.
   e.g. `find john doe` will only return members whose field contains `"john doe"`, not members with just `john` or just `doe`
@@ -244,9 +260,11 @@ Examples:
 
 Filters member list and displays members who have fields matching the given attribute.
 
-Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`
+Format: `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [j=/DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`
 
 * Each prefix may only be specified once. Specifying the same prefix more than once is an error.
+* When filtering by `s/STATUS`, FitDesk evaluates each member's status using the current system date when the command is run.
+
 * For each date/age field, operators may be combined as follows:
   * `>/` + `</` — range, e.g. `age>/20 age</30` finds members aged strictly between 20 and 30
   * `>/` + `=/` (same value) — greater than or equal, e.g. `age>/20 age=/20` finds members aged 20 or older
@@ -272,6 +290,7 @@ Format: `details INDEX`
 * Shows the details of the person at the specified `INDEX`.
 * The index refers to the index number shown in the displayed person list.
 * The index **must be a positive integer** 1, 2, 3, …
+* The displayed membership status is evaluated using the current system date when the details view is opened.
 
 Examples:
 * `list` followed by `details 1`
@@ -390,7 +409,7 @@ Format: `redo`
 <box type="info" seamless>
 
 **Note:**
-* `redo` is only available immediately after `undo`. Executing any new command (e.g. `add`, `edit`) after an `undo` clears the redo history.
+* `redo` is only available immediately after `undo`. Executing any new **undoable** command (e.g. `add`, `edit`, `delete`, `clear`, `renew`, `remark`) after an `undo` clears the redo history. Commands that do not modify data (e.g. `find`, `filter`, `list`, `help`) do **not** clear the redo history.
 * The redo history can hold up to 20 commands.
 
 </box>
@@ -409,14 +428,18 @@ Format: `exit`
 
 FitDesk data are saved in the hard disk automatically after any command that changes the data. There is no need to save manually.
 
+Membership status is not stored as a fixed value in the data file. It is derived from the member's join date, expiry date, and the current system date whenever FitDesk displays or filters members. Commands that refresh the list or details view, such as `list`, `filter`, `details`, `add`, and `delete`, will therefore show up-to-date statuses. If the app is left idle without any view refresh, the display will not change until a command or UI refresh occurs.
+
 ### Editing the data file
 
 FitDesk data are saved automatically as a JSON file `[JAR file location]/data/fitdesk.json`. Advanced users are welcome to update data directly by editing that data file.
 
+The data file must remain valid JSON and must contain exactly one valid value for every required persisted field of each member. Duplicate JSON keys, duplicate members, missing required fields, and invalid field values will all cause FitDesk to reject the saved data on the next startup.
+
 <box type="warning" seamless>
 
 **Caution:**
-If your changes to the data file makes its format invalid, FitDesk will discard all data and start with an empty data file at the next run.  Hence, it is recommended to take a backup of the file before editing it.<br>
+If your changes make the data file invalid, FitDesk will discard all saved members, reset the data file to an empty valid file on the next run, and show a warning message in the usual feedback area. Hence, it is recommended to take a backup of the file before editing it.<br>
 Furthermore, certain edits can cause FitDesk to behave in unexpected ways (e.g., if a value entered is outside the acceptable range). Therefore, edit the data file only if you are confident that you can update it correctly.
 </box>
 
@@ -427,6 +450,7 @@ Furthermore, certain edits can cause FitDesk to behave in unexpected ways (e.g.,
 ### Navigating command history
 
 Allows you to quickly re-use previously entered commands using the arrow keys in the command box.
+**Incorrect commands are not saved in the command history**
 
 * Press the `Up` arrow key to navigate to the previous command in history.
 * Press the `Down` arrow key to navigate to the next command in history.
@@ -489,7 +513,16 @@ Pressing `Tab` in the command box provides context-sensitive completions to help
 ## Known issues
 
 1. **When using multiple screens**, if you move the application to a secondary screen, and later switch to using only the primary screen, the GUI will open off-screen. The remedy is to delete the `preferences.json` file created by the application before running the application again.
-2. **If you minimize the Help Window** and then run the `help` command (or use the `Help` menu, or the keyboard shortcut `F1`) again, the original Help Window will remain minimized, and no new Help Window will appear. The remedy is to manually restore the minimized Help Window.
+
+--------------------------------------------------------------------------------------------------------------------
+
+## Planned Enhancements
+
+**Frustrated that you can't renew an expired membership?**
+
+Fret not as our future update has got you covered! We are planning a feature that allows you to renew expired memberships.
+
+Also, look forward to other surprise features 👀
 
 --------------------------------------------------------------------------------------------------------------------
 
@@ -501,12 +534,29 @@ Action     | Format, Examples
 **Clear**  | `clear`
 **Delete** | `delete INDEX`<br> e.g., `delete 3`
 **Edit**   | `edit INDEX [n/NAME] [p/PHONE_NUMBER] [g/GENDER] [d/DATE_OF_BIRTH] [e/EMAIL] [ec/EMERGENCY_CONTACT] ​`<br> e.g.,`edit 2 n/James Lee e/jameslee@example.com`
-**Find**   | `find KEYWORD [MORE_KEYWORDS]`<br> e.g., `find James Jake`
-**Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]`<br> e.g., `filter s/valid g/M`
+**Find**   | `find QUERY`<br> e.g., `find James Jake`
+**Filter**   | `filter [s/STATUS] [g/GENDER] [m/MEMBERSHIP_TYPE] [age>/AGE] [age</AGE] [age=/AGE] [j>/DATE] [j</DATE] [exp>/DATE] [exp</DATE] [exp=/DATE]` (`AGE` must be `0` to `2147483647`)<br> e.g., `filter s/valid g/M`
 **Remark**  | `remark INDEX r/[REMARK]`<br> e.g., `remark 1 r/Likes to swim.`
-**Renew**   | `renew INDEX [m/MEMBERSHIP_TYPE] ]`<br> e.g., `renew 2 m/monthly`
+**Renew**   | `renew INDEX [m/MEMBERSHIP_TYPE] `<br> e.g., `renew 2 m/monthly`
 **Details**   | `details INDEX`<br> e.g., `details 1`
 **List**   | `list`
 **Undo**   | `undo`
 **Redo**   | `redo`
 **Help**   | `help`
+**Exit**   | `exit`
+
+## Parameter constraints
+Parameter | Constraints
+----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Name | Should be non-empty string and can only contain: alphanumeric characters, '-' in the middle, and spaces.
+Date of Birth | Should be in the format `dd-mm-yyyy` and a valid date.
+Gender | Should be either `M` or `F` (case insensitive).
+Phone Number | Should only contain numbers, be 8 digits long, and start with 8 or 9
+Emergency Contact | Should only contain numbers, be 8 digits long, and start with 6, 8 or 9
+Membership Expiry Date | Should be in the format `dd-mm-yyyy` and a valid date.
+Membership Join Date | Should be in the format `dd-mm-yyyy` and a valid date.
+Membership Type | Should be either `monthly` or `annual` (case insensitive).
+Member Status | Can only be: `valid`, `invalid`, or `pending`.
+Email | Standard email format
+
+**Note**: Emergency contact number and phone number cannot be the same for the same member.

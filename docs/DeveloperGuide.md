@@ -46,7 +46,7 @@ Given below is a quick overview of main components and how they interact with ea
 
 The bulk of the app's work is done by the following four components:
 
-* [**`UI`**](#ui-component): The UI of the App.
+* [**`UI`**](#ui-component): The UI of the app.
 * [**`Logic`**](#logic-component): The command executor.
 * [**`Model`**](#model-component): Holds the data of the App in memory.
 * [**`Storage`**](#storage-component): Reads data from, and writes data to, the hard disk.
@@ -64,7 +64,7 @@ Each of the four main components (also shown in the diagram above),
 * defines its *API* in an `interface` with the same name as the Component.
 * implements its functionality using a concrete `{Component Name}Manager` class (which follows the corresponding API `interface` mentioned in the previous point.
 
-For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside component's being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
+For example, the `Logic` component defines its API in the `Logic.java` interface and implements its functionality using the `LogicManager.java` class which follows the `Logic` interface. Other components interact with a given component through its interface rather than the concrete class (reason: to prevent outside components being coupled to the implementation of a component), as illustrated in the (partial) class diagram below.
 
 <puml src="diagrams/ComponentManagers.puml" width="300" />
 
@@ -123,7 +123,7 @@ How the parsing works:
 ### Model component
 **API** : [`Model.java`](https://github.com/se-edu/addressbook-level3/tree/master/src/main/java/seedu/address/model/Model.java)
 
-<puml src="diagrams/ModelClassDiagram.puml" width="450" />
+<puml src="diagrams/ModelClassDiagram.puml" width="800" />
 
 
 The `Model` component,
@@ -133,13 +133,7 @@ The `Model` component,
 * stores a `UserPref` object that represents the user’s preferences. This is exposed to the outside as a `ReadOnlyUserPref` objects.
 * does not depend on any of the other three components (as the `Model` represents data entities of the domain, they should make sense on their own without depending on other components)
 
-<box type="info" seamless>
-
-**Note:** An alternative (arguably, a more OOP) model is given below. It has a `Tag` list in the `AddressBook`, which `Person` references. This allows `AddressBook` to only require one `Tag` object per unique tag, instead of each `Person` needing their own `Tag` objects.<br>
-
-<puml src="diagrams/BetterModelClassDiagram.puml" width="450" />
-
-</box>
+Membership status is modeled as derived data rather than persisted state. `Person#getMemberStatus()` computes a fresh `MemberStatus` from the member's join date, expiry date, and `LocalDate.now()` each time it is accessed. As a result, any command or UI path that rereads the member list or details view, such as `list`, `filter`, `details`, `add`, and `delete`, will reflect the current system date without requiring an application restart. The UI is not timer-driven, so statuses do not visibly change while the app is idle until some view refresh occurs.
 
 
 ### Storage component
@@ -152,6 +146,10 @@ The `Storage` component,
 * can save both address book data and user preference data in JSON format, and read them back into corresponding objects.
 * inherits from both `AddressBookStorage` and `UserPrefStorage`, which means it can be treated as either one (if only the functionality of only one is needed).
 * depends on some classes in the `Model` component (because the `Storage` component's job is to save/retrieve objects that belong to the `Model`)
+
+On load, persisted member data is validated strictly. Missing required fields, invalid field values, duplicate persons, and duplicate JSON keys are all treated as load failures.
+
+When loading fails, `MainApp` falls back to an empty `AddressBook`, immediately rewrites the corrupted data file as an empty valid file, and passes a warning message to the UI so it appears in `ResultDisplay` on startup.
 
 ### Common classes
 
@@ -308,7 +306,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 |----------|---------|--------------------------------------------------------------------|------------------------------------------------------|
 | `* * *`  | user    | view all members                                                   | browse the database                                  |
 | `* * *`  | user    | add a new member                                                   | register new members to the database                 |
-| `* * *`  | user    | delete a member                                                    | remove inactive records                              |
+| `* * *`  | user    | delete a member                                                    | remove invalid records                               |
 | `* * *`  | user    | view full details of a member                                      | manage members' accounts effectively                 |
 | `* * *`  | user    | find members by name                                               | locate details without going through the entire list |
 | `* *`    | user    | edit a member's details                                            | keep member records updated                          |
@@ -342,7 +340,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 3a. The given inputs are invalid.
-    * 3a1.FitDesk shows an error message.
+    * 3a1. FitDesk shows an error message.
 
       Use case resumes at step 2.
 
@@ -361,8 +359,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 2a. The list is empty.
+    * 2a1. FitDesk shows an error message.
 
-  Use case ends.
+      Use case ends.
 
 
 * 3a. The given index is invalid.
@@ -376,7 +375,7 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **MSS**
 
 1.  Receptionist requests to find members by keyword(s)
-2.  FitDesk searches for members whose names contain any of the given keywords
+2.  FitDesk searches for members whose field contains the given keyword substring
 3.  FitDesk shows a list of matching members
 
     Use case ends.
@@ -410,9 +409,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 **Extensions**
 
 * 3a. Invalid input provided
-    * 3a1. FitDesk detects invalid input.
-      3a2. FitDesk displays an error message and requests correct input.
-      3a3. Receptionist corrects the input.
+    * 3a1. FitDesk detects invalid input. 
+    * 3a2. FitDesk displays an error message and requests correct input. 
+    * 3a3. Receptionist corrects the input.
 
       Use case resumes at step 4.
 
@@ -428,19 +427,11 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 **MSS**
 
-1.  Receptionist requests to filter members by status (Active/Inactive)
+1.  Receptionist requests to filter members by status (Valid/Invalid/Pending)
 2.  FitDesk filters member list by specified status
 3.  FitDesk displays filtered member list
 
     Use case ends.
-
-**Extensions**
-
-* 2a. The given status is invalid.
-    * 2a1. FitDesk shows an error message.
-
-      Use case ends.
-
 
 **Use case: UC06 - View Details of a Specific Member**
 
@@ -578,9 +569,9 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
       Use case resumes at step 2.
 
 * 4a. Invalid membership type provided
-    * 3a1. FitDesk detects invalid input. 
-      3a2. FitDesk displays an error message and requests correct input.
-      3a3. Receptionist corrects the input.
+    * 4a1. FitDesk detects invalid input. 
+    * 4a2. FitDesk displays an error message and requests correct input.
+    * 4a3. Receptionist corrects the input.
 
       Use case resumes at step 5.
 
@@ -599,10 +590,10 @@ Priorities: High (must have) - `* * *`, Medium (nice to have) - `* *`, Low (unli
 
 ### Glossary
 
-* **Mainstream OS**: Windows, Linux, Unix, MacOS
+* **Mainstream OS**: Windows, Linux, Unix, macOS
 * **Private contact detail**: A contact detail that is not meant to be shared with others
 * **Member**: A registered gym patron whose details are stored and managed in FitDesk
-* **Membership status**: The current standing of a member's membership, which can be one of the following — active, expired, or suspended
+* **Membership status**: The current standing of a member's membership, which can be one of the following — valid, invalid, or pending
 * **Emergency contact**: A person designated by the member to be contacted in the event of a medical or safety emergency
 
 --------------------------------------------------------------------------------------------------------------------
@@ -656,7 +647,7 @@ testers are expected to do more *exploratory* testing.
 
 1. Deleting a person after filtering the list
 
-   1. Prerequisites: Use the `filter` command (e.g. `filter s/active`) to show a subset of members. At least one member in the filtered list.
+   1. Prerequisites: Use the `filter` command (e.g. `filter s/valid`) to show a subset of members. At least one member in the filtered list.
 
    1. Test case: `delete 1`<br>
       Expected: First member in the *filtered* list is deleted. The filtered view is refreshed. Details of the deleted member shown in the status message.
@@ -678,7 +669,7 @@ testers are expected to do more *exploratory* testing.
    1. Open `data/fitdesk.json` in a text editor and introduce invalid JSON (e.g. delete a closing brace `}` or set a field to an invalid value such as `"gender": "X"`).
 
    1. Launch the application.<br>
-      Expected: FitDesk starts with an empty member list (no sample data). A warning may be logged. The corrupted file is not overwritten until a data-modifying command is executed.
+      Expected: FitDesk starts with an empty member list (no sample data). The corrupted file is immediately replaced with an empty valid data file, and a warning is shown in the normal feedback area.
 
 1. Dealing with missing/incorrect preference file
 

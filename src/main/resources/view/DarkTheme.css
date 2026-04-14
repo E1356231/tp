@@ -396,6 +396,25 @@
     -fx-font-size: 16px;
     -fx-text-fill: #010504;
 }
+.details-remark-area {
+    -fx-font-family: "Metro";
+    -fx-font-size: 16px;
+    -fx-text-fill: #010504;
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-min-height: 0;
+}
+.details-remark-area .content {
+    -fx-padding: 12 4 12 4;
+}
+.details-remark-area .scroll-pane {
+    -fx-padding: 0;
+}
+.details-remark-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
 
 #memberStatus.valid-status {
     -fx-text-fill: #20813a;
@@ -412,6 +431,15 @@
     -fx-padding: 2 20 2 20;
     -fx-background-radius: 25;
 }
+
+#memberStatus.pending-status {
+    -fx-text-fill: #B06C00;
+    -fx-font-weight: bold;
+    -fx-background-color: derive(#FFAD29, 50%);
+    -fx-padding: 2 20 2 20;
+    -fx-background-radius: 25;
+}
+
 #memberStatus.valid-tag {
     -fx-text-fill: #20813a;
     -fx-font-weight: bold;
@@ -424,6 +452,14 @@
     -fx-text-fill: red;
     -fx-font-weight: bold;
     -fx-background-color: derive(#FF3C3C, 80%);
+    -fx-padding: 2 10 2 10;
+    -fx-background-radius: 5;
+}
+
+#memberStatus.pending-tag {
+    -fx-text-fill: #B06C00;
+    -fx-font-weight: bold;
+    -fx-background-color: derive(#FFAD29, 50%);
     -fx-padding: 2 10 2 10;
     -fx-background-radius: 5;
 }
